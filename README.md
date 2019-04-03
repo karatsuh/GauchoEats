@@ -10,6 +10,5 @@ Installation
 
 Functionality and Known Issues
 
-License
-  MIT License
-  https://github.com/karatsuh/TheMapaches/blob/master/LICENSE
+License:
+  MIT License (https://github.com/karatsuh/TheMapaches/blob/master/LICENSE)
