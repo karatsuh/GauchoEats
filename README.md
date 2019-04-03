@@ -10,4 +10,6 @@ Installation
 
 Functionality and Known Issues
 
-License (add details here on your choice of license and a link to your LICENSE file)
+License
+  MIT License
+  https://github.com/karatsuh/TheMapaches/blob/master/LICENSE
