@@ -1,7 +1,7 @@
-# TheMapaches
+# GauchoEats by TheMapaches
 
-Project summary
--	One-sentence description
+Project Summary
+-	GauchoEats provides continuous metrics in real time, including the number of individuals present in the dining commons, the peak periods of activity, and also the “best time” to dine so that students can decide which dining common is least congested.
 -	Project overview (with 1-2 paragraphs of project specifics)
 
 Installation
@@ -10,5 +10,4 @@ Installation
 
 Functionality and Known Issues
 
-License:
-  MIT License (https://github.com/karatsuh/TheMapaches/blob/master/LICENSE)
+License: MIT License (https://github.com/karatsuh/TheMapaches/blob/master/LICENSE)
