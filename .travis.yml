@@ -1,0 +1,4 @@
+matrix:
+  include:
+    - language: python
+      script: pytest
