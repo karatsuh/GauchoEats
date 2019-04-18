@@ -2,3 +2,4 @@ matrix:
   include:
     - language: python
       script: pytest
+    - language: java
