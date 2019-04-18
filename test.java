@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class test {
     @Test
     public static void main(String[] args) {
-        assertEquals(gauchoEats.helloWorld(), "Hello world!");
+        assertEquals(2, 33);
+
+        // assertEquals(gauchoEats.helloWorld(), "Hello world!");
     }
 }
