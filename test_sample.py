@@ -3,4 +3,4 @@
 from imageRecognition import helloWorld
 
 def test_helloWorld():
-    assert helloWorld() == "Hello world!"
+    assert helloWorld() == "Haello world!"
