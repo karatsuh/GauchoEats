@@ -2,5 +2,5 @@
 
 class ImageRecg:
     
-    def salute():
+    def salute(self):
         return "Hello world!"
