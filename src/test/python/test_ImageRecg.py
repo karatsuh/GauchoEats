@@ -3,11 +3,11 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'main', 'python'))
 
-from imageRecognition import helloWorld
+from ImageRecg import ImageRecg
 
 import pytest
 
-class testImageRecg(object):
+class TestImageRecg(object):
     
-    def test_helloWorld():
-        assert helloWorld() == "Hello world!"
+    def test_salute():
+        assert salute() == "Hello world!"
