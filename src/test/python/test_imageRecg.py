@@ -7,7 +7,7 @@ from imageRecognition import helloWorld
 
 import pytest
 
-class imageRecg(object):
+class estImageRecg(object):
     
-def test_helloWorld():
-    assert helloWorld() == "Hello world!"
+    def test_helloWorld():
+        assert helloWorld() == "Hello world!"
