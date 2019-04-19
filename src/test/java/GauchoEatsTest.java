@@ -8,7 +8,6 @@ public class GauchoEatsTest {
 
     @Test
     public void helloWorld() {
-        assertEquals(2, 33);
-        // assertEquals(gauchoEats.helloWorld(), "Hello Lidi!");
+        assertEquals(gauchoEats.helloWorld(), "Hello Lidi!");
     }
 }
