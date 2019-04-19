@@ -32,7 +32,7 @@ class TestCalculator(object):
 
     def test_div(self):
         res = self.cal.div(2, 3)
-        assert res == 0
+        assert res == 2/3
 
     def test_div_with_exception(self):
         with pytest.raises(ZeroDivisionError):
