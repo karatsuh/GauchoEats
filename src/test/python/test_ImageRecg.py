@@ -9,5 +9,5 @@ import pytest
 
 class TestImageRecg(object):
     
-    def test_salute():
+    def test_salute(self):
         assert salute() == "Hello world!"
