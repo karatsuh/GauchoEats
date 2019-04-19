@@ -1,10 +1,22 @@
 // tests.java
 
-public class tests {
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class test {
+    @Test
     public static void main(String[] args) {
-        if (gauchoEats.helloWorld() == "Hello world!")
-            System.out.println("Test passed.");
-        else
-            System.out.println("Test failed.");
+        assertEquals(2, 33);
+
+        // assertEquals(gauchoEats.helloWorld(), "Hello world!");
     }
 }
+
+// public class tests {
+//    public static void main(String[] args) {
+//        if (gauchoEats.helloWorld() == "Hello world!")
+//            System.out.println("Test passed.");
+//        else
+//            System.out.println("Test failed.");
+//    }
+// }
