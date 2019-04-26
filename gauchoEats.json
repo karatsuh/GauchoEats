@@ -1,0 +1,97 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "gaucho eats",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "getCapacity",
+                    "slots": [
+                        {
+                            "name": "diningCommon",
+                            "type": "diningCommon"
+                        }
+                    ],
+                    "samples": [
+                        "how many people are in {diningCommon}",
+                        "how busy is {diningCommon}",
+                        "test {diningCommon}",
+                        "give me {diningCommon}",
+                        "gaucho eats give me {diningCommon}",
+                        "open {diningCommon}"
+                    ]
+                },
+                {
+                    "name": "getLine",
+                    "slots": [
+                        {
+                            "name": "diningCommon",
+                            "type": "diningCommon"
+                        }
+                    ],
+                    "samples": [
+                        "how long is {diningCommon} line",
+                        "how many people are in line at {diningCommon}",
+                        "how long is the line at {diningCommon}",
+                        "how long are the lines at the dining commons",
+                        "how long are the lines"
+                    ]
+                },
+                {
+                    "name": "leastCrowded",
+                    "slots": [],
+                    "samples": [
+                        "which dining common is the least crowded"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "diningCommon",
+                    "values": [
+                        {
+                            "id": "ortega",
+                            "name": {
+                                "value": "ortega"
+                            }
+                        },
+                        {
+                            "id": "carrillo",
+                            "name": {
+                                "value": "carrillo"
+                            }
+                        },
+                        {
+                            "id": "dlg",
+                            "name": {
+                                "value": "dlg",
+                                "synonyms": [
+                                    "De La Guerra"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
