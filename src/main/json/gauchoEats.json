@@ -49,7 +49,7 @@
                         }
                     ],
                     "samples": [
-                        "how long is {diningCommon} line",
+                        "how long is {diningCommon}  line",
                         "how many people are in line at {diningCommon}",
                         "how long is the line at {diningCommon}",
                         "how long are the lines at the dining commons",
@@ -60,8 +60,47 @@
                     "name": "leastCrowded",
                     "slots": [],
                     "samples": [
+                        "who has the least amount of people",
                         "which dining hall is the least crowded",
                         "which dining common is the least crowded"
+                    ]
+                },
+                {
+                    "name": "getMenu",
+                    "slots": [
+                        {
+                            "name": "diningCommon",
+                            "type": "diningCommon"
+                        }
+                    ],
+                    "samples": [
+                        "show me the menu",
+                        "show me the menu for {diningCommon}"
+                    ]
+                },
+                {
+                    "name": "announcements",
+                    "slots": [],
+                    "samples": [
+                        "are there any announcements"
+                    ]
+                },
+                {
+                    "name": "hours",
+                    "slots": [
+                        {
+                            "name": "diningCommon",
+                            "type": "diningCommon"
+                        },
+                        {
+                            "name": "mealTime",
+                            "type": "mealTime"
+                        }
+                    ],
+                    "samples": [
+                        "show me {mealTime} hours for {diningCommon}",
+                        "what time is {mealTime} at {diningCommon}",
+                        "when is {mealTime} at {diningCommon}"
                     ]
                 }
             ],
@@ -88,6 +127,31 @@
                                 "synonyms": [
                                     "De La Guerra"
                                 ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "mealTime",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "brunch"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "dinner"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "lunch"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "breakfast"
                             }
                         }
                     ]
