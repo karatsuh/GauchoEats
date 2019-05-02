@@ -94,7 +94,62 @@ def lambda_handler(event, context):
         skillCardContent += "It will take only 5 min to get to DLG and 20 min to finish meal!"
         skillCard = createSkillCard(skillCardTitle, skillCardContent)
         return createResponse(speech, True, skillCard)
-    
+        
+    if event['request']['intent']['name'] == "hours":
+        if event['request']['intent']['slots']['diningCommon']['value'] == "Ortega":
+            if event['request']['intent']['slots']['mealTime']['value'] == "breakfast":
+                speech = buildSpeech("Ortega is open from 7:15am to 10:00am for breakfast")
+            elif event['request']['intent']['slots']['mealTime']['value'] == "lunch":
+                speech = buildSpeech("Ortega is open from 11:00am to 2:00pm for lunch")
+            elif event['request']['intent']['slots']['mealTime']['value'] == "dinner":
+                speech = buildSpeech("Ortega is open from 5:00pm to 8:00pm for dinner")
+            skillCardTitle = "Ortega's Hours"
+            skillCardContent = "Breakfast: 7:15am-10:00am\nLunch: 11:00am-2:30pm\nDinner: 5:00pm-8:00pm"
+        elif event['request']['intent']['slots']['diningCommon']['value'] == "carrillo":
+            if event['request']['intent']['slots']['mealTime']['value'] == "breakfast":
+                speech = buildSpeech("Carrillo is open from 7:15am to 10:00am for breakfast")
+            elif event['request']['intent']['slots']['mealTime']['value'] == "lunch":
+                speech = buildSpeech("Carrillo is open from 11:00am to 2:00pm for lunch")
+            elif event['request']['intent']['slots']['mealTime']['value'] == "dinner":
+                speech = buildSpeech("Carrillo is open from 5:00pm to 8:00pm for dinner")
+            skillCardTitle = "Carrillo's Hours"
+            skillCardContent = "Breakfast: 7:15am-10:00am\nLunch: 11:00am-2:30pm\nDinner: 5:00pm-8:00pm"
+        elif event['request']['intent']['slots']['diningCommon']['value'] == "dlg":
+            if event['request']['intent']['slots']['mealTime']['value'] == "breakfast":
+                speech = buildSpeech("D.L.G. is not open for breakfast")
+            elif event['request']['intent']['slots']['mealTime']['value'] == "lunch":
+                speech = buildSpeech("D.L.G. is open from 11:00am to 2:00pm for lunch")
+            elif event['request']['intent']['slots']['mealTime']['value'] == "dinner":
+                speech = buildSpeech("D.L.G. is open from 5:00pm to 8:00pm for dinner")
+            skillCardTitle = "D.L.G.'s Hours"
+            skillCardContent = "Breakfast: Closed\nLunch: 11:00am-2:30pm\nDinner: 5:00pm-8:00pm"
+        skillCard = createSkillCard(skillCardTitle, skillCardContent)
+        return createResponse(speech, True, skillCard)
+        
+    if event['request']['intent']['name'] == "announcements":
+        speech = buildSpeech("The berry man is here!")
+        skillCardTitle = "Announcements"
+        skillCardContent = "Check out his fresh berries"
+        skillCard = createSkillCard(skillCardTitle, skillCardContent)
+        return createResponse(speech, True, skillCard)
+
+    if event['request']['intent']['name'] == "getMenu":
+        speech = buildSpeech("getMenu request received, which menu would you like to view")
+        if event['request']['intent']['slots']['diningCommon']['value'] == "dlg":
+            speech = buildSpeech("De La Guerra has burgers today, would you like to hear more menu items?")
+            skillCardTitle = "D.L.G.'s Menu"
+            skillCardContent = "Blue Plate Special: \nTaqueria: \nPizza: \nTo Order: \nGrill: \nSalads/Deli: \nBakery: "
+        elif event['request']['intent']['slots']['diningCommon']['value'] == "Ortega":
+            speech = buildSpeech("Ortega has tacos today, would you like to hear more menu items?")
+            skillCardTitle = "Ortega's Menu"
+            skillCardContent = "Salads:\nHotFoods:\nBakery:\n"
+        elif event['request']['intent']['slots']['diningCommon']['value'] == "carrillo":
+            speech = buildSpeech("Carrillo has soup today, would you like to hear more menu items?")
+            skillCardTitle = "Carrillo's Menu"
+            skillCardContent = "Grill:\nBakery:"
+        skillCard = createSkillCard(skillCardTitle, skillCardContent)
+        return createResponse(speech, True, skillCard)
+
     if event['request']['intent']['name'] == "getCapacity":
         speech = buildSpeech("getCapacity request received, where's the slot?!")
         if event['request']['intent']['slots']['diningCommon']['value'] == "dlg":
