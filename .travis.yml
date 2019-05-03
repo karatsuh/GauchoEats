@@ -3,9 +3,12 @@ matrix:
     - language: python
       script: pytest
     - language: node_js
-      node_js: 10
+      node_js:
+        - node
+      cache:
+        directories:
+          - node_modules
       install: npm install -g serverless
       script:
-        - npm --version
         - sls deploy
     - language: java
