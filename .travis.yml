@@ -3,11 +3,12 @@ matrix:
     - language: python
     script:
       - pytest
+
     -language: node_js
-    before_install:
-      - nvm install 6
-      - node --version
-      - npm --version
+    node_js:
+      -10
     install:
       - npm install -g serverless
+    script:
+      - npm --version
     - language: java
