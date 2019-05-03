@@ -7,4 +7,5 @@ matrix:
       install: npm install -g serverless
       script:
         - npm --version
+        - sls deploy
     - language: java
