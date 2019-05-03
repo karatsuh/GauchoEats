@@ -10,5 +10,5 @@ matrix:
           - node_modules
       install: npm install -g serverless
       script:
-        - sls deploy
+        - sls deploy function --function my-service-dev-hello
     - language: java
