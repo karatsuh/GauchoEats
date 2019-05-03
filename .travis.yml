@@ -4,10 +4,4 @@ matrix:
     script:
       - pytest
 
-    -language: node_js
-    sudo: false
-    node_js:
-      - 10
-    script:
-      - npm --version
     - language: java
