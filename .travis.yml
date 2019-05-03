@@ -2,4 +2,9 @@ matrix:
   include:
     - language: python
       script: pytest
+    - language: node_js
+      node_js: 10
+      install: npm install -g serverless
+      script:
+        - npm --version
     - language: java
