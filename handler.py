@@ -2,6 +2,7 @@ import json
 
 
 def hello(event, context):
+    print("Updated/deployed the my-service-dev-hello lambda function!")
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "input": event
