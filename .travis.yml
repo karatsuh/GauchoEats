@@ -1,8 +1,6 @@
 matrix:
   include:
     - language: python
-    python:
-      - '3.7'
     script:
       - pytest
       - sls deploy
@@ -10,10 +8,6 @@ matrix:
       - nvm install 6
       - node --version
       - npm --version
-
     install:
       - npm install -g serverless
-
-    after_script:
-      - serverless deploy -v
     - language: java
