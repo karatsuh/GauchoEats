@@ -1,7 +1,10 @@
 matrix:
   include:
     - language: python
-      script: pytest
+      script:
+        - pytest
+      install:
+        - pip install boto3
     - language: node_js
       node_js:
         - node
