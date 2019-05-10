@@ -17,5 +17,7 @@ def getDate():
     return req.json()[0]['code'] #assume the first available date is today
 
 def test_getDate():
+    print("test_getDate():\n")
     datetimeDate = datetime.today().strftime('%Y-%m-%d')
-    assert (str)datetimeDate = (str)getDate()
+    print("datetime module: " + datetimeDate " == " "diningAPIDate: " + getDate())
+    assert (str)datetimeDate == (str)getDate()
