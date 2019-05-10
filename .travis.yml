@@ -3,7 +3,7 @@ matrix:
     - language: python
       cache: pip
       script:
-        - pytest envVariableTest.py $AWS_ACCESS_KEY_ID
+        - python envVariableTest.py
       install:
         - pip install boto3 #installing boto3 for AWS-python
     - language: node_js
