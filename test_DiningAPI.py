@@ -1,6 +1,7 @@
 import requests
 import pytest
 import json
+import os
 
 diningCamBaseUrl = os.environ['CAM_BASE_URL']
 diningBaseUrl = os.environ['DINING_BASE_URL']
