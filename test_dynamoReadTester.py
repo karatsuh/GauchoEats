@@ -15,12 +15,13 @@ def dynamoUpdate(diningCommon, metric, update):
     #metric = "diningCapacity","line"
     table.update_item(
     Key={'diningCommon': diningCommon},
-    UpdateExpression="set" + metric + "=:" + metric,
+    UpdateExpression="set " + metric + "=:" + metric,
     ExpressionAttributeValues={
         ':' + metric: update
     },
     ReturnValues="UPDATED_NEW"
     )
+
 def dynamoGet(diningCommon, metric):
     #PreCondition: DiningCommon and metric are both strings
     #PostCondition: returns the wanted metric as a string
