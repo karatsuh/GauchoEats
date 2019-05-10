@@ -3,7 +3,7 @@ matrix:
     - language: python
       cache: pip
       script:
-        - py.test
+        - py.test -s
         - python test_DiningAPI.py
       install:
         - pip install boto3 #installing boto3 for AWS-python
