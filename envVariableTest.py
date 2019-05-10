@@ -2,7 +2,7 @@ import sys
 import os
 #import pytest
 
-print(os.environ['AWS_ACCESS_KEY_ID']
+print(os.environ['AWS_ACCESS_KEY_ID'])
 #sys.argv[1] = Key
 #sys.argv[2] = secret
 #
