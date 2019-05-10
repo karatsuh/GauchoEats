@@ -40,4 +40,4 @@ def test_dynamoUpdate():
 
     assert dynamoGet("dlg", "line") == "42"
 
-    dynamoUpdate("dlg","line",42) #change it back
+    dynamoUpdate("dlg","line",45) #change it back
