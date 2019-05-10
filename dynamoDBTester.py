@@ -1,7 +1,7 @@
 import boto3
 import json
-#clientelle = boto3.client('dynamodb',aws_access_key_id='yyyy', aws_secret_access_key='xxxx', region_name='***')
-#table = client.Table('GauchoEats')
+#client = boto3.client('dynamodb',aws_access_key_id='yyyy', aws_secret_access_key='xxxx', region_name='***')
+#table = client.Table('TravisTest')
 
 # def dynamoGet(DiningCommon, metric):
 #     #PreCondition: DiningCommon and metric are both strings
