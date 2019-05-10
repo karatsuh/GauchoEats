@@ -8,7 +8,19 @@ client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_
 table = client.Table('TravisTest')
 
 
-
+def dynamoUpdate(diningCommon, metric, update):
+    #PreCondition: DiningCommon and metric are both strings
+    #PostCondition: updates TravisTest table
+    #DiningCommon = "dlg","carrillo","ortega"
+    #metric = "diningCapacity","line"
+    table.update_item(
+    Key={'diningCommon': diningCommon},
+    UpdateExpression="set" + metric + "=:" + metric,
+    ExpressionAttributeValues={
+        ':' + metric: update
+    },
+    ReturnValues="UPDATED_NEW"
+    )
 def dynamoGet(diningCommon, metric):
     #PreCondition: DiningCommon and metric are both strings
     #PostCondition: returns the wanted metric as a string
@@ -20,16 +32,9 @@ def dynamoGet(diningCommon, metric):
     return metric
 
 def test_dynamoRead():
-    assert dynamoGet("dlg","line") == "45"
+    assert dynamoGet("dlg","line") == "42"
 
 def test_dynamoUpdate():
-    table.update_item(
-    Key={'diningCommon': 'dlg'},
-    UpdateExpression="set line =:line",
-    ExpressionAttributeValues={
-        ':line': 42
-    },
-    ReturnValues="UPDATED_NEW"
-    )
+    dynamoUpdate("dlg","line",45)
 
-    assert dynamoGet("dlg", "line") == "42"
+    assert dynamoGet("dlg", "line") == "45"
