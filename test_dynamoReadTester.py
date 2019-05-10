@@ -20,7 +20,7 @@ def dynamoGet(diningCommon, metric):
     return metric
 
 def test_dynamoRead():
-    assert dynamoGet("dlg","line") == 45
+    assert dynamoGet("dlg","line") == "45"
 
 def test_dynamoUpdate():
     table.update_item(
@@ -30,4 +30,6 @@ def test_dynamoUpdate():
         ':line': 42
     },
     ReturnValues="UPDATED_NEW"
-)
+    )
+
+    assert dynamoGet("dlg", "line") == "42"
