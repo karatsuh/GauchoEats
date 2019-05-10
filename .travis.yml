@@ -3,7 +3,7 @@ matrix:
     - language: python
       cache: pip
       script:
-        - pytest envVariableTest.py
+        - pytest test_envVariableTest.py
         - python dynamoReadTester.py
       install:
         - pip install boto3 #installing boto3 for AWS-python
