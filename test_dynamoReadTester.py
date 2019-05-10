@@ -20,4 +20,14 @@ def dynamoGet(diningCommon, metric):
     return metric
 
 def test_dynamoRead():
-    assert dynamoGet("dlg","line") == 45s
+    assert dynamoGet("dlg","line") == 45
+
+def test_dynamoUpdate():
+    table.update_item(
+    Key={'diningCommon': 'dlg'},
+    UpdateExpression="set line =:line",
+    ExpressionAttributeValues={
+        ':line': 42
+    },
+    ReturnValues="UPDATED_NEW"
+)
