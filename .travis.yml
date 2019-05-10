@@ -6,6 +6,7 @@ matrix:
         - py.test
       install:
         - pip install boto3 #installing boto3 for AWS-python
+        - pip install requests
     - language: node_js
       node_js:
         - node
