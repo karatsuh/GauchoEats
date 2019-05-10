@@ -19,7 +19,7 @@ def getDate():
 def test_getDate():
     print("test_getDate():\n")
     datetimeDate = datetime.today().strftime('%Y-%m-%d')
-    print("Note, dates may be off by a day
+    print("Note, dates may be off by a day")
     print("datetime module: " + datetimeDate + " == diningAPIDate: " + getDate())
 
 def test_getMenu():
