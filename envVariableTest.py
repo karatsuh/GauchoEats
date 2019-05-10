@@ -9,9 +9,9 @@ import pytest
 def checker():
     if str(sys.argv[1]) == "[secure]":
         print("Not actually getting keys...")
-        return false
+        return False
     else:
         print("Environment variables are being received!!")
-        return true
+        return True
 
 assert( checker() == True)
