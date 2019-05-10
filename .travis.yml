@@ -1,4 +1,7 @@
-matrix:
+env:
+  global:
+    - AWS_ACCESS_KEY_ID
+  matrix:
   include:
     - language: python
       cache: pip
