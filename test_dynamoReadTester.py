@@ -33,9 +33,11 @@ def dynamoGet(diningCommon, metric):
     return metric
 
 def test_dynamoRead():
-    assert dynamoGet("dlg","line") == "42"
+    assert dynamoGet("dlg","line") == 45"
 
 def test_dynamoUpdate():
-    dynamoUpdate("dlg","line",45)
+    dynamoUpdate("dlg","line",42)
 
-    assert dynamoGet("dlg", "line") == "45"
+    assert dynamoGet("dlg", "line") == "42"
+
+    dynamoUpdate("dlg","line",42) #change it back
