@@ -33,12 +33,12 @@ def dynamoGet(diningCommon, metric):
     return metric
 
 def test_dynamoRead():
-    print("test_dynamoRead():\n")
+    print("\ntest_dynamoRead():\n")
     print("dlg/line == 45")
     assert dynamoGet("dlg","line") == "45"
 
 def test_dynamoUpdate():
-    print("test_dynamoUpdate():\n")
+    print("\ntest_dynamoUpdate():\n")
     dynamoUpdate("dlg","line",42)
     print("Update dlg/line to 42\ndynamoGet(dlg,line) == 42")
     assert dynamoGet("dlg", "line") == "42"

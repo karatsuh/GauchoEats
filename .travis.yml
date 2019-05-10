@@ -4,7 +4,6 @@ matrix:
       cache: pip
       script:
         - py.test -s
-        - python test_DiningAPI.py
       install:
         - pip install boto3 #installing boto3 for AWS-python
         - pip install requests
