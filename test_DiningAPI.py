@@ -20,4 +20,4 @@ def test_getDate():
     print("test_getDate():\n")
     datetimeDate = datetime.today().strftime('%Y-%m-%d')
     print("datetime module: " + datetimeDate + " == diningAPIDate: " + getDate())
-    assert (str)datetimeDate == (str)getDate()
+    assert datetimeDate == getDate()
