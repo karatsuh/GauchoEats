@@ -3,6 +3,7 @@ import json
 
 def hello(event, context):
     print("Now using sls deploy function to not use cloudFormation anymore")
+    print("Hi")
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "input": event
