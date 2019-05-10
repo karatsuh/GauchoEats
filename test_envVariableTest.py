@@ -14,4 +14,5 @@ def checker():
         print("Environment variables are being received!!")
         return True
 
-assert(checker())
+def test_envTest():
+    assert( checker() == True )
