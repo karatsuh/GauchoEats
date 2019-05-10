@@ -1,8 +1,16 @@
 import sys
+import pytest
 
-print(str(sys.argv[1]))
-if str(sys.argv[1]) == "[secure]":
-    print("Key is a rule key!")
-else:
-    print("Try out the actual dynamoDBTester!")
-#print(AWS_SECRET_ACCESS_KEY)
+#sys.argv[1] = Key
+#sys.argv[2] = secret
+
+def checker:
+    if str(sys.argv[1]) == "[secure]":
+        print("Not actually getting keys...")
+        return false
+    else:
+        print("Environment variables are being received!!")
+        return true
+
+
+assert( checker() == True)
