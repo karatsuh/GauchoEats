@@ -6,11 +6,7 @@ import boto3  # AWS SDK for python
 client = boto3.resource('dynamodb')
 table = client.Table('GauchoEats')
 
-#api
-diningCamBaseUrl = 'https://api.ucsb.edu/dining/cams/v2'
-diningBaseUrl = 'https://api.ucsb.edu/dining/menu/v1'
-diningCamKey = '?ucsb-api-key=RWNmwapAJVigtDphtVjipbv2Rrqfulik'
-diningKey = '?ucsb-api-key=UbuRqRNLJCxq4Sdx0nX2wGpwFb5SGOxY'
+
 diningCodes = {}
 diningCodes['dlg'] = 'de-la-guerra'
 diningCodes['ortega'] =  'ortega'
@@ -179,12 +175,25 @@ def lambda_handler(event, context):
 
     diningCommon = event['request']['intent']['slots']['diningCommon']['value']
     if event['request']['intent']['name'] == "getMenu":
-        speech = buildSpeech("getMenu request received, which menu would you like to view")
+        ###
+        # diningApiUrl = diningBaseUrl + '/' + getDate() + '/' + diningCodes['dlg'] + '/' + mealCodes['lunch'] + diningKey
+        # menu = requests.get(diningApiUrl).json()
+        # dynamodb = boto3.resource('dynamodb', region_name='us-east-1', endpoint_url="http://localhost:8000")
+        # table = dynamodb.Table('MenuTest')
+        # item = {}
+        # item['name'] = 'lunch menu of dlg'
+        # item['detailedMenu'] = {}
+        # item['detailedMenu'] = menu
+        # response = table.put_item(item)
+        # print("PutItem succeeded:")
+        # print(json.dumps(response, indent=4))#, cls=DecimalEncoder))
+        ###
+        '''speech = buildSpeech("getMenu request received, which menu would you like to view")
         if diningCommon == "dlg":
             diningApiUrl = diningBaseUrl + '/' + getDate() + '/' + diningCodes['dlg'] + '/' + mealCodes['lunch'] + diningKey
             menu = requests.get(diningApiUrl).json()
             speech = buildSpeech("De La Guerra has " + menu[0]['name'] + " today, would you like to hear more menu items?")
-            skillCardTitle = "D.L.G.'s Menu"
+        skillCardTitle = "D.L.G.'s Menu"
         if diningCommon == "Ortega":
             diningApiUrl = diningBaseUrl + '/' + getDate() + '/' + diningCodes['ortega'] + '/' + mealCodes['lunch'] + diningKey
             menu = requests.get(diningApiUrl).json()
@@ -199,6 +208,7 @@ def lambda_handler(event, context):
         for x in range(10):
             skillCardContent += menu[x + 1]['name'] + ", "
         skillCardContent += menu[11]['name']
+        '''
         # if diningCommon == "dlg":
         #     speech = buildSpeech(
         #         "De La Guerra has burgers today, would you like to hear more menu items?")
@@ -214,6 +224,13 @@ def lambda_handler(event, context):
         #         "Carrillo has soup today, would you like to hear more menu items?")
         #     skillCardTitle = "Carrillo's Menu"
         #     skillCardContent = "Grill:\nBakery:"
+        if diningCommon == "dlg":
+            menu = dynamoGet("dlg", "dinner")
+            speech - buildSpeech("De La Guerra has " + map(menu, 1) + "today, would you like to hear more menu items?")
+            skillCardTitle = "DLG's Menu:"
+        skillCardContent = ""
+        #for x in range(10):
+            #skillCardContent += map(menu, 1) + ", "
         skillCard = createMenuSkillCard(skillCardTitle, skillCardContent)
         return createResponse(speech, True, skillCard)
 
