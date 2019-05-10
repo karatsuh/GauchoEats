@@ -2,6 +2,9 @@ import requests
 import pytest
 import json
 import os
+from datetime import datetime
+
+
 
 diningCamBaseUrl = os.environ['CAM_BASE_URL']
 diningBaseUrl = os.environ['DINING_BASE_URL']
@@ -13,4 +16,6 @@ def getDate():
     req = requests.get(diningBaseUrl + diningKey)
     return req.json()[0]['code'] #assume the first available date is today
 
-print(getDate())
+def test_getDate():
+    datetimeDate = datetime.today().strftime('%Y-%m-%d')
+    assert (str)datetimeDate = (str)getDate()
