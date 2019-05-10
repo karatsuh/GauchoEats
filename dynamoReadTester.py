@@ -3,7 +3,7 @@ import json
 import os
 import pytest
 
-client = boto3.client('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ[
+client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ[
 'AWS_SECRET_ACCESS_KEY'], region_name='us-east-1')
 table = client.Table('GauchoEats')
 

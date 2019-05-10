@@ -7,7 +7,7 @@ import pytest
 
 
 def checker():
-    if str(sys.argv[1]) == "[secure]":
+    if str(os.environ['AWS_ACCESS_KEY_ID']) == "[secure]":
         print("Not actually getting keys...")
         return False
     else:
