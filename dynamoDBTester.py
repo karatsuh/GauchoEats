@@ -19,4 +19,4 @@ def dynamoGet(DiningCommon, metric):
     metric = str(metric)
     return metric
 
-print(dynamoGet("dlg","line")
+print(dynamoGet("dlg","line"))
