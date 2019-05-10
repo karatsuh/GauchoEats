@@ -20,4 +20,4 @@ def dynamoGet(diningCommon, metric):
     return metric
 
 def test_dynamoRead():
-    assert dynamoGet("dlg","line")) == 45s
+    assert dynamoGet("dlg","line") == 45s
