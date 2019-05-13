@@ -21,7 +21,3 @@ def test_getDate():
     datetimeDate = datetime.today().strftime('%Y-%m-%d')
     print("Note, dates may be off by a day")
     print("datetime module: " + datetimeDate + " == diningAPIDate: " + getDate())
-
-def test_getMenu():
-    print("test_getMenu() in progress")
-test_getDate()
