@@ -15,5 +15,4 @@ matrix:
           - node_modules
       install: npm install -g serverless
       script:
-        - sls deploy function --function hello
     - language: java
