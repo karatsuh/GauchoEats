@@ -7,12 +7,4 @@ matrix:
       install:
         - pip install boto3 #installing boto3 for AWS-python
         - pip install requests
-    - language: node_js
-      node_js:
-        - node
-      cache:
-        directories:
-          - node_modules
-      install: npm install -g serverless
-      script:
     - language: java
