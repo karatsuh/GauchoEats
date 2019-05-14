@@ -1,3 +1,6 @@
+#command line run:
+#python counterDLG.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --output output/test.avi
+
 from pyimagesearch.centroidtracker import CentroidTracker
 from pyimagesearch.trackableobject import TrackableObject
 #from datetime import datetime
@@ -10,6 +13,7 @@ import imutils
 import time
 import dlib
 import cv2
+import requests
 
 def getY(width, H, W):
 	 return (-4.0/15) * (H/W) * width + (0.6 * H - 20)
@@ -19,8 +23,8 @@ ap.add_argument("-p", "--prototxt", required=True,
 	help="path to Caffe 'deploy' prototxt file")
 ap.add_argument("-m", "--model", required=True,
 	help="path to Caffe pre-trained model")
-ap.add_argument("-i", "--input", type=str,
-	help="path to optional input video file")
+#ap.add_argument("-i", "--input", type=str,
+#    help="path to optional input video file")
 ap.add_argument("-o", "--output", type=str,
 	help="path to optional output video file")
 ap.add_argument("-c", "--confidence", type=float, default=0.4,
@@ -28,6 +32,9 @@ ap.add_argument("-c", "--confidence", type=float, default=0.4,
 ap.add_argument("-s", "--skip-frames", type=int, default=15,
 	help="# of skip frames between detections")
 args = vars(ap.parse_args())
+
+url = "https://api.ucsb.edu/dining/cams/v2/stream/de-la-guerra?ucsb-api-key=RWNmwapAJVigtDphtVjipbv2Rrqfulik"
+#stream = requests.get(url, stream=True)
 
 CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 	"bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
@@ -37,14 +44,17 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 print("[INFO] loading model...")
 net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
 
-if not args.get("input", False):
-	print("[INFO] starting video stream...")
-	vs = VideoStream(src=0).start()
-	time.sleep(2.0)
+#if not args.get("input", False):
+#    print("[INFO] starting video stream...")
+#    vs = VideoStream(src=0).start()
+#    time.sleep(2.0)
+#
+#else:
+#    print("[INFO] opening video file...")
+#    vs = cv2.VideoCapture(args["input"])
 
-else:
-	print("[INFO] opening video file...")
-	vs = cv2.VideoCapture(args["input"])
+vs = VideoStream(src=url).start()
+time.sleep(2.0)
 
 writer = None
 
@@ -71,10 +81,10 @@ fps = FPS().start()
 while True:
 	frame = vs.read()
 
-	frame = frame[1] if args.get("input", False) else frame
-
-	if args["input"] is not None and frame is None:
-		break
+#    frame = frame[1] if args.get("input", False) else frame
+#
+#    if args["input"] is not None and frame is None:
+#        break
 ####################################################################################################################
 	# resize the frame to have a maximum width of 500 pixels (the
 	# less data we have, the faster we can process it), then convert
