@@ -7,6 +7,22 @@ client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_
 'AWS_SECRET_ACCESS_KEY'], region_name='us-east-1')
 table = client.Table('TravisTest')
 
+def dynamoAdd(diningCommon,diningCapacity,line):
+    table.put_item(
+        Item={
+            'diningCommon': diningCommon,
+            'diningCapacity': diningCapacity,
+            'line': line
+        }
+    )
+
+def dynamoDelete(diningCommon):
+    #deletes the item in the table with the specified dining hall name
+    response = table.delete_item(
+        Key={
+            'diningCommon': diningCommon
+        }
+)
 
 def dynamoUpdate(diningCommon, metric, update):
     #PreCondition: DiningCommon and metric are both strings
