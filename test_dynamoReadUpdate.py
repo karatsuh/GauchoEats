@@ -8,6 +8,7 @@ from boto3.dynamodb.conditions import Key, Attr
 client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ[
 'AWS_SECRET_ACCESS_KEY'], region_name='us-east-1')
 table = client.Table('TravisTest')
+logTable = client.Table('gauchoeats_log')
 
 def dynamoAdd(diningCommon,diningCapacity,line):
     table.put_item(
@@ -35,7 +36,8 @@ def dynamoScan():
                 else:
                     return int(o)
             return super(DecimalEncoder, self).default(o)
-    response = table.scan()
+
+    response = logTable.scan()
 
     for i in response['Items']:
         print("Items print:")
@@ -86,4 +88,5 @@ def test_dynamoUpdate():
     dynamoUpdate("dlg","line",45) #change it back
 
 def test_dynamoScan():
+    print("\ntest_dynamoScan():\n")
     dynamoScan()
