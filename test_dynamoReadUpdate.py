@@ -2,6 +2,8 @@ import boto3
 import json
 import os
 import pytest
+import decimal
+from boto3.dynamodb.conditions import Key, Attr
 
 client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'], aws_secret_access_key=os.environ[
 'AWS_SECRET_ACCESS_KEY'], region_name='us-east-1')
@@ -33,23 +35,14 @@ def dynamoScan():
                 else:
                     return int(o)
             return super(DecimalEncoder, self).default(o)
-    response = table.scan(
-        FilterExpression=fe,
-        ProjectionExpression=pe,
-        ExpressionAttributeNames=ean
-        )
+    response = table.scan()
 
     for i in response['Items']:
         print(json.dumps(i, cls=DecimalEncoder))
         # or do something else, like items.append(i)
 
     while 'LastEvaluatedKey' in response:
-        response = table.scan(
-            ProjectionExpression=pe,
-            FilterExpression=fe,
-            ExpressionAttributeNames= ean,
-            ExclusiveStartKey=response['LastEvaluatedKey']
-            )
+        response = table.scan()
 
         for i in response['Items']:
             print(json.dumps(i, cls=DecimalEncoder))
