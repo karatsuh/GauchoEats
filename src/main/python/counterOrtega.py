@@ -1,3 +1,5 @@
+#python counterOrtega.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input videos/ortega2.mov --output output/test.avi 
+
 from pyimagesearch.centroidtracker import CentroidTracker
 from pyimagesearch.trackableobject import TrackableObject
 #from datetime import datetime
@@ -216,7 +218,7 @@ while True:
 						if direction < 0 and to.start == 0:
 							totalDown += 1
 							to.counted = True
-							inDH -= 1
+							inDH += 1
 
 				# if the direction is positive (indicating the object
 				# is moving down) AND the centroid is below the
@@ -226,7 +228,7 @@ while True:
 						if direction > 0 and to.start == 1:
 							totalUp += 1
 							to.counted = True
-							inDH += 1
+							inDH -= 1
 
 		# store the trackable object in our dictionary
 		trackableObjects[objectID] = to
