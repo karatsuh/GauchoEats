@@ -26,6 +26,7 @@ def dynamoDelete(diningCommon):
 
 def dynamoScan():
     x = table.scan()
+    print("Scanning...")
     for i in x:
         print(i)
 
