@@ -1,4 +1,4 @@
-#python ortegaTest.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input videos/carillo1.mov 
+#python ortegaTest.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input videos/ortega2.mov 
 
 from pyimagesearch.centroidtracker import CentroidTracker
 from pyimagesearch.trackableobject import TrackableObject
@@ -222,7 +222,7 @@ while True:
     if writer is not None:
         writer.write(frame)
 
-    cv2.imshow("Frame", frame)
+    #cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
 
     if key == ord("q"):
