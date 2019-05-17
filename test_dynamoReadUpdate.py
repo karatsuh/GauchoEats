@@ -38,15 +38,16 @@ def dynamoScan():
     response = table.scan()
 
     for i in response['Items']:
+        print("Items print:")
         print(json.dumps(i, cls=DecimalEncoder))
-        # or do something else, like items.append(i)
 
     while 'LastEvaluatedKey' in response:
         response = table.scan()
 
+        print("lastEval print:")
         for i in response['Items']:
             print(json.dumps(i, cls=DecimalEncoder))
-            # or do something else, like items.append(i)
+
 def dynamoUpdate(diningCommon, metric, update):
     #PreCondition: DiningCommon and metric are both strings
     #PostCondition: updates TravisTest table
