@@ -25,11 +25,27 @@ def dynamoDelete(diningCommon):
 )
 
 def dynamoScan():
-    x = table.scan()
-    print("Scanning...")
-    for i in x:
-        print(i)
+    response = table.scan(
+        FilterExpression=fe,
+        ProjectionExpression=pe,
+        ExpressionAttributeNames=ean
+        )
 
+    for i in response['Items']:
+        print(json.dumps(i, cls=DecimalEncoder))
+        # or do something else, like items.append(i)
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            ProjectionExpression=pe,
+            FilterExpression=fe,
+            ExpressionAttributeNames= ean,
+            ExclusiveStartKey=response['LastEvaluatedKey']
+            )
+
+        for i in response['Items']:
+            print(json.dumps(i, cls=DecimalEncoder))
+            # or do something else, like items.append(i)
 def dynamoUpdate(diningCommon, metric, update):
     #PreCondition: DiningCommon and metric are both strings
     #PostCondition: updates TravisTest table
