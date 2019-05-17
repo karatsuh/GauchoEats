@@ -24,6 +24,11 @@ def dynamoDelete(diningCommon):
         }
 )
 
+def dynamoScan():
+    x = table.scan()
+    for i in x:
+        print(i)
+
 def dynamoUpdate(diningCommon, metric, update):
     #PreCondition: DiningCommon and metric are both strings
     #PostCondition: updates TravisTest table
@@ -60,3 +65,6 @@ def test_dynamoUpdate():
     assert dynamoGet("dlg", "line") == "42"
 
     dynamoUpdate("dlg","line",45) #change it back
+
+def test_dynamoScan():
+    dynamoScan()
