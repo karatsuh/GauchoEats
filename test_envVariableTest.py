@@ -11,7 +11,7 @@ def checker():
         print("Not actually getting keys...")
         return False
     else:
-        print("Environment variables are being received!!")
+        print("\nEnvironment variables are being received!!")
         return True
 
 def test_envTest():
