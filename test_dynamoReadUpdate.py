@@ -41,7 +41,9 @@ def dynamoScan():
 
     for i in response['Items']:
         print("Items print:")
-        print(json.dumps(i, cls=DecimalEncoder))
+        x = json.dumps(i, cls=DecimalEncoder)
+        print(x)
+        #print(json.dumps(i, cls=DecimalEncoder))
 
     while 'LastEvaluatedKey' in response:
         response = table.scan()
