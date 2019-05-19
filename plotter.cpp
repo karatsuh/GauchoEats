@@ -1,6 +1,10 @@
+#include "matplotlibcpp.h"
 #include <iostream>
-using namespace std;
+namespace plt = matplotlibcpp;
 
 int main(){
-
+  plt::plot({1,3,2,4});
+  const char* filename = "./testPlot.png";
+  std::cout << "Saving result to " << filename << std::endl;;
+  plt::save(filename);
 }
