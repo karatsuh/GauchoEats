@@ -9,10 +9,7 @@ client = boto3.resource('dynamodb')
 table = client.Table('GauchoEats')
 sagemakerClient = boto3.client('sagemaker-runtime')
 # api
-diningCamBaseUrl = 'https://api.ucsb.edu/dining/cams/v2'
-diningBaseUrl = 'https://api.ucsb.edu/dining/menu/v1'
-diningCamKey = '?ucsb-api-key=RWNmwapAJVigtDphtVjipbv2Rrqfulik'
-diningKey = '?ucsb-api-key=UbuRqRNLJCxq4Sdx0nX2wGpwFb5SGOxY'
+
 diningCodes = {}
 diningCodes['dlg'] = 'de-la-guerra'
 diningCodes['ortega'] = 'ortega'
