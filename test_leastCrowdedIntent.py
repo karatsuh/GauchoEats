@@ -1,5 +1,7 @@
 #test_leastCrowdedIntent.py
 
+#test_leastCrowdedIntent.py
+
 import boto3
 import json
 import os
@@ -16,11 +18,11 @@ table = client.Table('leastCrowdedTest')
 def test_readCapacities():
     print("\ntest_readCapacities():\n")
     print("dlg == 1")
-    assert dynamoGet("dlg", "capacity") == "1"
+    assert dynamoGet("dlg", "diningCapacity") == "1"
     print("carrillo == 2")
-    assert dynamoGet("carrillo", "capacity") == "2"
+    assert dynamoGet("carrillo", "diningCapacity") == "2"
     print("ortega == 3")
-    assert dynamoGet("ortega", "capacity") == "3"
+    assert dynamoGet("ortega", "diningCapacity") == "3"
 
 def test_leastCrowded():
     print("\ntest_leastCrowded():\n")
@@ -28,8 +30,8 @@ def test_leastCrowded():
     carrillo = ("carrillo", dynamoGet("carrillo", "diningCapacity"))
     ortega = ("ortega", dynamoGet("ortega", "diningCapacity"))
 
-    if (dlg[1] == 0) and (carrillo[1] == 0) and (ortega[1] == 0):
-        speech = buildSpeech("The dining commons are closed")
+    #if (dlg[1] == 0) and (carrillo[1] == 0) and (ortega[1] == 0):
+    #    speech = buildSpeech("The dining commons are closed")
     else:
         if (dlg[1] <= carrillo[1]) and (dlg[1] <= ortega[1]):
             leastCrowded = (dlg[0], dlg[1])
@@ -37,8 +39,8 @@ def test_leastCrowded():
             leastCrowded = (carrillo[0], carrillo[1])
         else:
             leastCrowded = (ortega[0], ortega[1])
-        speech = buildSpeech("The least crowded dining common is " +
-                                leastCrowded[0] + " with capacity " + leastCrowded[1])
+        #speech = buildSpeech("The least crowded dining common is " +
+        #                        leastCrowded[0] + " with capacity " + leastCrowded[1])
     print("testing least crowded:\n")
     assert leastCrowded[0] == "dlg"
     print("testing capacity:\n")
