@@ -1,7 +1,5 @@
 #test_leastCrowdedIntent.py
 
-#test_leastCrowdedIntent.py
-
 import boto3
 import json
 import os
@@ -32,13 +30,13 @@ def test_leastCrowded():
 
     #if (dlg[1] == 0) and (carrillo[1] == 0) and (ortega[1] == 0):
     #    speech = buildSpeech("The dining commons are closed")
+    #else:
+    if (dlg[1] <= carrillo[1]) and (dlg[1] <= ortega[1]):
+        leastCrowded = (dlg[0], dlg[1])
+    elif (carrillo[1] <= dlg[1]) and (carrillo[1] <= ortega[1]):
+        leastCrowded = (carrillo[0], carrillo[1])
     else:
-        if (dlg[1] <= carrillo[1]) and (dlg[1] <= ortega[1]):
-            leastCrowded = (dlg[0], dlg[1])
-        elif (carrillo[1] <= dlg[1]) and (carrillo[1] <= ortega[1]):
-            leastCrowded = (carrillo[0], carrillo[1])
-        else:
-            leastCrowded = (ortega[0], ortega[1])
+        leastCrowded = (ortega[0], ortega[1])
         #speech = buildSpeech("The least crowded dining common is " +
         #                        leastCrowded[0] + " with capacity " + leastCrowded[1])
     print("testing least crowded:\n")
