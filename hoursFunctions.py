@@ -85,12 +85,12 @@ def test_hours(diningCommon, mealTime):
         diningCommon = diningCommon.capitalize()
         diningCommon.replace("Dlg", "De La Guerra")
         speech = diningCommon + " doesn't have " + mealTime + "."
-        return createSimpleResponse(speech, True)
+        return speech
     if (isClosedForMeal(diningCommon, mealTime, isWeekend)):
         diningCommon = diningCommon.capitalize()
         diningCommon.replace("Dlg", "De La Guerra")
         speech = diningCommon + " is closed for " + mealTime + "."
-        return createSimpleResponse(speech, True)
+        return speech
         skillCardTitle = ""
         skillCardContent = ""
         speech = "Please ask another question."
