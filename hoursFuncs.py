@@ -175,4 +175,4 @@ def test_hours(diningCommon, mealTime):
                 "-" + hours['brunchClose'] + "\nDinner: " + \
                 hours['dinnerOpen'] + "-" + hours['dinnerClose']
     skillCard = createSkillCard(skillCardTitle, skillCardContent)
-    return createResponse(speech, True, skillCard)
+    return speech
