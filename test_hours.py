@@ -13,10 +13,8 @@ client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_
 'AWS_SECRET_ACCESS_KEY'], region_name='us-east-1')
 table = client.Table('GauchoEats')
 
-def test_dlgHours():
+def test_hours(diningCommon, mealTime):
     print("testing hours: ")
-    diningCommon = "dlg"
-    mealTime = "lunch"
     isWeekend = True if (str(dynamoGetMap("dlg", "isWeekend")) == "True") else False
 
     if (doesNotHaveMeal(diningCommon, mealTime)):
@@ -113,3 +111,9 @@ def test_dlgHours():
                 hours['dinnerOpen'] + "-" + hours['dinnerClose']
     skillCard = createSkillCard(skillCardTitle, skillCardContent)
     return createResponse(speech, True, skillCard)
+
+def test_dlgHours():
+    print("testing dlg breakfast: ")
+    dlgBreakfast = test_hours("dlg", "breakfast")
+    assert dlgBreakfast == "D.L.G. doesn't have breakfast."
+    #test_hours("dlg", "lunch")
