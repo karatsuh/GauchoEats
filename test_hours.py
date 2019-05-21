@@ -15,7 +15,8 @@ table = client.Table('GauchoEats')
 
 def test_dlgHours():
     print("testing hours: ")
-    mealTime = "dlg"
+    diningCommon = "dlg"
+    mealTime = "lunch"
     if (doesNotHaveMeal(diningCommon, mealTime)):
         diningCommon = diningCommon.capitalize()
         diningCommon.replace("Dlg", "De La Guerra")
