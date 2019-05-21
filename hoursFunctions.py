@@ -78,7 +78,8 @@ def isClosedForMeal(diningCommon, mealTime, isWeekend):
             isClosed = True
     return isClosed
 
-def test_hours(diningCommon, mealTime):
+def test_hours(DiningCommon, mealTime):
+    diningCommon = DiningCommon
     isWeekend = True if (str(dynamoGetMap("dlg", "isWeekend")) == "True") else False
 
     if (doesNotHaveMeal(diningCommon, mealTime)):
