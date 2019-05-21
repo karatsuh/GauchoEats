@@ -16,5 +16,5 @@ table = client.Table('GauchoEats')
 def test_dlgHours():
     print("testing dlg breakfast: ")
     dlgBreakfast = test_hours("dlg", "breakfast")
-    assert dlgBreakfast == "D.L.G. doesn't have breakfast."
+    assert dlgBreakfast == buildSpeech("D.L.G. doesn't have breakfast.")
     #test_hours("dlg", "lunch")
