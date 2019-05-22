@@ -67,19 +67,7 @@ def doesNotHaveMeal(diningCommon, mealTime):
         doesNotHas = True
     return doesNotHas
 
-def isClosedForMeal(diningCommon, mealTime, isWeekend):
-    isClosed = False
-    if (isWeekend):
-        if ((mealTime == "breakfast") or (mealTime == "lunch") or (mealTime == "late-night")):
-            isClosed = True
-        elif (diningCommon == "Ortega"):
-            isClosed = True
-    elif (mealTime == "brunch"):
-            isClosed = True
-    return isClosed
-
-def test_hours(DiningCommon, mealTime):
-    diningCommon = DiningCommon
+def test_hours(diningCommon, mealTime):
     isWeekend = True if (str(dynamoGetMap("dlg", "isWeekend")) == "True") else False
 
     if (doesNotHaveMeal(diningCommon, mealTime)):
@@ -87,14 +75,6 @@ def test_hours(DiningCommon, mealTime):
         diningCommon.replace("Dlg", "De La Guerra")
         speech = diningCommon + " doesn't have " + mealTime + "."
         return speech
-    if (isClosedForMeal(diningCommon, mealTime, isWeekend)):
-        diningCommon = diningCommon.capitalize()
-        diningCommon.replace("Dlg", "De La Guerra")
-        speech = diningCommon + " is closed for " + mealTime + "."
-        return speech
-        skillCardTitle = ""
-        skillCardContent = ""
-        speech = "Please ask another question."
     if (not isWeekend):
         if diningCommon == "Ortega":
             hours = dynamoGetMap("ortega", "hours")
