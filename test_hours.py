@@ -17,5 +17,5 @@ def test_dlgHours():
     print("testing dlg breakfast: ")
     diningCommon = "dlg"
     mealTime = "breakfast"
-    dlgBreakfast = test_hours(diningCommon, mealTime)
+    dlgBreakfast = hours(diningCommon, mealTime)
     assert dlgBreakfast == "Dlg doesn't have breakfast."
