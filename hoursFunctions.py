@@ -11,35 +11,6 @@ client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_
 'AWS_SECRET_ACCESS_KEY'], region_name='us-east-1')
 table = client.Table('GauchoEats')
 
-def createResponse(speech, endSession, skillCard):
-    # returns json back to alexa for it to parse an appropriate response
-    response = {}
-    response['version'] = "1.0"
-    response['response'] = {}
-    response['response']['outputSpeech'] = speech
-    response['response']['card'] = skillCard
-    response['response']['reprompt'] = {}
-    response['response']['reprompt']['outputSpeech'] = speech
-    response['shouldEndSession'] = endSession
-    return response
-
-def createSimpleResponse(speech, endSession):
-    # returns json back to alexa for it to parse an appropriate response
-    response = {}
-    response['version'] = "1.0"
-    response['response'] = {}
-    response['response']['outputSpeech'] = speech
-    response['response']['reprompt'] = {}
-    response['response']['reprompt']['outputSpeech'] = speech
-    response['shouldEndSession'] = endSession
-    return response
-
-def buildSpeech(message):
-    speech = {}
-    speech['type'] = 'PlainText'
-    speech['text'] = message
-    return speech
-
 def createSkillCard(title, content):
     card = {}
     card['type'] = 'Simple'
@@ -67,7 +38,7 @@ def doesNotHaveMeal(diningCommon, mealTime):
         doesNotHas = True
     return doesNotHas
 
-def test_hours(diningCommon, mealTime):
+def hours(diningCommon, mealTime):
     isWeekend = True if (str(dynamoGetMap("dlg", "isWeekend")) == "True") else False
 
     if (doesNotHaveMeal(diningCommon, mealTime)):
