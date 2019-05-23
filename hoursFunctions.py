@@ -32,7 +32,7 @@ def doesNotHaveMeal(diningCommon, mealTime):
 
 def hours(diningCommon, mealTime):
     isWeekend = True if (str(dynamoGetMap("dlg", "isWeekend")) == "True") else False
-
+    speech = ""
     if (doesNotHaveMeal(diningCommon, mealTime)):
         diningCommon = diningCommon.capitalize()
         diningCommon.replace("Dlg", "De La Guerra")
