@@ -13,11 +13,10 @@ client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_
 'AWS_SECRET_ACCESS_KEY'], region_name='us-east-1')
 table = client.Table('GauchoEats')
 
-def test_dlgHours():
+def test_hours():
+    isWeekend = True if (str(dynamoGetMap("dlg", "isWeekend")) == "True") else False
     print("testing dlg breakfast: ")
-    diningCommon = "dlg"
-    mealTime = "breakfast"
-    dlgBreakfast = hours(diningCommon, mealTime)
+    dlgBreakfast = hours("dlg", "breakfast")
     assert dlgBreakfast == "Dlg doesn't have breakfast."
     if isWeekend == false:
         print("testing dlg lunch: ")
