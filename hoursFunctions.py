@@ -11,14 +11,6 @@ client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_
 'AWS_SECRET_ACCESS_KEY'], region_name='us-east-1')
 table = client.Table('GauchoEats')
 
-def createSkillCard(title, content):
-    card = {}
-    card['type'] = 'Simple'
-    card['title'] = title
-    card['content'] = content
-    return card
-
-
 def dynamoGetMap(DiningCommon, metric):
     # PreCondition: DiningCommon and metric are both strings
     # PostCondition: returns the wanted metric as a string
@@ -57,11 +49,6 @@ def hours(diningCommon, mealTime):
                 speech = "Ortega is open from " + hours['dinnerOpen'] + " to " + hours['dinnerClose'] + " for dinner"
             elif mealTime == "late-night":
                 speech = "Ortega doesn't have late-night dining"
-            skillCardTitle = "Ortega's Hours"
-            skillCardContent = "Breakfast: " + hours['breakfastOpen'] + \
-                "-" + hours['breakfastClose'] + "\nLunch: " + \
-                hours['lunchOpen'] + "-" + hours['lunchClose'] + \
-                "\nDinner: " + hours['dinnerOpen'] + "-" + hours['dinnerClose']
         elif diningCommon == "carrillo":
             hours = dynamoGetMap("carrillo", "hours")
             if mealTime == "breakfast":
@@ -72,11 +59,6 @@ def hours(diningCommon, mealTime):
                 speech = "Carrillo is open from " + hours['dinnerOpen'] + " to " + hours['dinnerClose'] + " for dinner"
             elif mealTime == "late-night":
                 speech = "Carrillo doesn't have late-night dining"
-            skillCardTitle = "Carrillo's Hours"
-            skillCardContent = "Breakfast: " + hours['breakfastOpen'] + \
-                "-" + hours['breakfastClose'] + "\nLunch: " + \
-                hours['lunchOpen'] + "-" + hours['lunchClose'] + \
-                "\nDinner: " + hours['dinnerOpen'] + "-" + hours['dinnerClose']
         elif diningCommon == "dlg":
             hours = dynamoGetMap("dlg", "hours")
             if mealTime == "lunch":
@@ -85,12 +67,6 @@ def hours(diningCommon, mealTime):
                 speech = "D.L.G. is open from " + hours['dinnerOpen'] + " to " + hours['dinnerClose'] + " for dinner"
             elif mealTime == "late-night":
                 speech = "D.L.G. is open from " + hours['late-nightOpen'] + " to " + hours['late-nightClose'] + " for late-night"
-            skillCardTitle = "D.L.G.'s Hours"
-            skillCardContent = "Lunch: " + hours['lunchOpen'] + \
-                "-" + hours['lunchClose'] + "\nDinner: " + \
-                hours['dinnerOpen'] + "-" + hours['dinnerClose'] + \
-                "\nLate-Night: " + \
-                hours['late-nightOpen'] + "-" + hours['late-nightClose']
     else:
         if diningCommon == "carrillo":
             hours = dynamoGetMap("carrillo", "hours")
@@ -98,19 +74,10 @@ def hours(diningCommon, mealTime):
                 speech = "Carrillo is open from " + hours['brunchOpen'] + " to " + hours['brunchClose'] + " for brunch"
             elif mealTime == "dinner":
                 speech = "Carrillo is open from " + hours['dinnerOpen'] + " to " + hours['dinnerClose'] + " for dinner"
-            skillCardTitle = "Carrillo's Hours"
-            skillCardContent = "Brunch: " + hours['brunchOpen'] + \
-                "-" + hours['brunchClose'] + "\nDinner: " + \
-                hours['dinnerOpen'] + "-" + hours['dinnerClose']
         elif diningCommon == "dlg":
             hours = dynamoGetMap("dlg", "hours")
             if mealTime == "brunch":
                 speech = "D.L.G. is open from " + hours['brunchOpen'] + " to " + hours['brunchClose'] + " for brunch"
             elif mealTime == "dinner":
                 speech = "D.L.G. is open from " + hours['dinnerOpen'] + " to " + hours['dinnerClose'] + " for dinner"
-            skillCardTitle = "D.L.G.'s Hours"
-            skillCardContent = "Brunch: " + hours['brunchOpen'] + \
-                "-" + hours['brunchClose'] + "\nDinner: " + \
-                hours['dinnerOpen'] + "-" + hours['dinnerClose']
-    skillCard = createSkillCard(skillCardTitle, skillCardContent)
     return speech
