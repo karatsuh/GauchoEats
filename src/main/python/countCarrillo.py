@@ -2,6 +2,7 @@
 
 from pyimagesearch.centroidtracker import CentroidTracker
 from pyimagesearch.trackableobject import TrackableObject
+from dynamoUI import DynamoUI
 import time
 from imutils.video import VideoStream
 from imutils.video import FPS
@@ -11,6 +12,7 @@ import imutils
 import time
 import dlib
 import cv2
+import datetime
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--prototxt", required=True,
@@ -68,11 +70,14 @@ inDH = 0
 tracking = 0
 
 fps = FPS().start()
+database = DynamoUI()
+database.clearCapacityLog("carrillo")
+isOpen = database.isDiningOpen("carrillo")
 
 now = datetime.datetime.now()
-interval = datetime.timedelta(minutes=1)
+interval = datetime.timedelta(seconds=30)
 
-while True:
+while True and isOpen:
     frame = vs.read()
     # frame = frame[1] if args.get("input", False) else frame
 
@@ -212,9 +217,13 @@ while True:
 
     current = datetime.datetime.now()
     if current > now + interval:
+        adjustment = datetime.timedelta(hours=7)
+        current = current - adjustment
         database.updateCapacity("carrillo", inDH)
+        updateString = current.strftime("%H:%M:%S") + " " + str(inDH)
+        database.updateCapacityLog("carrillo", updateString)
         print("---- UPDATED DATABASE -----")
-        now = current
+        now = current + adjustment
 
     #("In Line", inLine)
 
@@ -228,7 +237,7 @@ while True:
     if writer is not None:
         writer.write(frame)
 
-    cv2.imshow("Frame", frame)
+    #cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
 
     if key == ord("q"):
@@ -236,6 +245,7 @@ while True:
 
     totalFrames += 1
     fps.update()
+    isOpen = database.isDiningOpen("carrillo")
 
 
 fps.stop()

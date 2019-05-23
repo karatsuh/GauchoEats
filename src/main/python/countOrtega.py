@@ -13,6 +13,7 @@ import datetime
 import time
 import dlib
 import cv2
+import requests
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--prototxt", required=True,
@@ -38,7 +39,6 @@ print("[INFO] loading model...")
 net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
 
 url = "https://api.ucsb.edu/dining/cams/v2/stream/ortega?ucsb-api-key=RWNmwapAJVigtDphtVjipbv2Rrqfulik"
-
 vs = VideoStream(src=url).start()
 time.sleep(2.0)
 
@@ -69,15 +69,16 @@ totalUp = 0
 inDH = 0
 tracking = 0
 
-database = DynamoUI()
-
 
 fps = FPS().start()
+database = DynamoUI()
+database.clearCapacityLog("ortega")
+isOpen = database.isDiningOpen("ortega")
 
 now = datetime.datetime.now()
-interval = datetime.timedelta(minutes=1)
+interval = datetime.timedelta(seconds=30)
 
-while True:
+while True and isOpen:
     frame = vs.read()
 
     # frame = frame[1] if args.get("input", False) else frame
@@ -223,9 +224,13 @@ while True:
 
     current = datetime.datetime.now()
     if current > now + interval:
+        adjustment = datetime.timedelta(hours=7)
+        current = current - adjustment
         database.updateCapacity("ortega", inDH)
+        updateString = current.strftime("%H:%M:%S") + " " + str(inDH)
+        database.updateCapacityLog("ortega", updateString)
         print("---- UPDATED DATABASE -----")
-        now = current
+        now = current + adjustment
 
     #("In Line", inLine)
 
@@ -247,6 +252,7 @@ while True:
 
     totalFrames += 1
     fps.update()
+    isOpen = database.isDiningOpen("ortega")
 
 
 fps.stop()
