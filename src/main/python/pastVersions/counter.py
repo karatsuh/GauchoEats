@@ -1,3 +1,5 @@
+#scp -i Mapaches48.pem ortega2.mov ec2-user@ec2-204-236-192-118.compute-1.amazonaws.com:detection/videos
+
 from pyimagesearch.centroidtracker import CentroidTracker
 from pyimagesearch.trackableobject import TrackableObject
 #from datetime import datetime

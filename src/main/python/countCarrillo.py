@@ -1,4 +1,4 @@
-#python ortegaTest.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input videos/ortega2.mov 
+#python3 countCarrillo.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel 
 
 from pyimagesearch.centroidtracker import CentroidTracker
 from pyimagesearch.trackableobject import TrackableObject
@@ -17,8 +17,8 @@ ap.add_argument("-p", "--prototxt", required=True,
     help="path to Caffe 'deploy' prototxt file")
 ap.add_argument("-m", "--model", required=True,
     help="path to Caffe pre-trained model")
-ap.add_argument("-i", "--input", type=str,
-   help="path to optional input video file")
+# ap.add_argument("-i", "--input", type=str,
+#     help="path to optional input video file")
 # ap.add_argument("-o", "--output", type=str,
 #     help="path to optional output video file")
 ap.add_argument("-c", "--confidence", type=float, default=0.4,
@@ -35,19 +35,18 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
 print("[INFO] loading model...")
 net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
 
-# url = "https://api.ucsb.edu/dining/cams/v2/stream/ortega?ucsb-api-key=RWNmwapAJVigtDphtVjipbv2Rrqfulik"
+# if not args.get("input", False):
+#     print("[INFO] starting video stream...")
+#     vs = VideoStream(src=0).start()
+#     time.sleep(2.0)
 
-# vs = VideoStream(src=url).start()
-# time.sleep(2.0)
+# else:
+#     print("[INFO] opening video file...")
+#     vs = cv2.VideoCapture(args["input"])
 
-if not args.get("input", False):
-   print("[INFO] starting video stream...")
-   vs = VideoStream(src=0).start()
-   time.sleep(2.0)
-
-else:
-   print("[INFO] opening video file...")
-   vs = cv2.VideoCapture(args["input"])
+url = "https://api.ucsb.edu/dining/cams/v2/stream/carrillo?ucsb-api-key=RWNmwapAJVigtDphtVjipbv2Rrqfulik"
+vs = VideoStream(src=url).start()
+time.sleep(2.0)
 
 writer = None
 
@@ -63,19 +62,22 @@ counter = 0
 totalFrames = 0
 totalDown = 0
 totalUp = 0
+#inLine = 0
 
 inDH = 0
 tracking = 0
 
 fps = FPS().start()
 
+now = datetime.datetime.now()
+interval = datetime.timedelta(minutes=1)
+
 while True:
     frame = vs.read()
+    # frame = frame[1] if args.get("input", False) else frame
 
-    frame = frame[1] if args.get("input", False) else frame
-
-    if args["input"] is not None and frame is None:
-       break
+    # if args["input"] is not None and frame is None:
+    #     break
 ####################################################################################################################
     # resize the frame to have a maximum width of 500 pixels (the
     # less data we have, the faster we can process it), then convert
@@ -103,6 +105,7 @@ while True:
     rects = []
 
     if totalFrames % args["skip_frames"] == 0:
+        
         status = "Detecting"
         trackers = []
 
@@ -111,11 +114,9 @@ while True:
         detections = net.forward()
 
         for i in np.arange(0, detections.shape[2]):
-
             confidence = detections[0, 0, i, 2]
 
             if confidence > args["confidence"]:
-
                 idx = int(detections[0, 0, i, 1])
 
                 if CLASSES[idx] != "person":
@@ -130,10 +131,11 @@ while True:
 
                 trackers.append(tracker)
 
+
     else:
         for tracker in trackers:
-            status = "Tracking"
 
+            status = "Tracking"
             tracker.update(rgb)
             pos = tracker.get_position()
 
@@ -144,46 +146,44 @@ while True:
 
             rects.append((startX, startY, endX, endY))
 
-    # cv2.line(frame, (W // 2, 0), (W // 2, H), (0, 255, 255), 2)
+    #cv2.line(frame, (0, H - (H // 2)), (W, H - (H // 2)), (0, 255, 255), 2)
 
     objects = ct.update(rects)
 
     for (objectID, centroid) in objects.items():
         to = trackableObjects.get(objectID, None)
-
         if to is None:
             to = TrackableObject(objectID, centroid)
-            if centroid[0] < W // 2:
+            if centroid[1] < H // 2:
                 to.start = 1
-            elif centroid[0] > W // 2:
+                #inLine += 1
+            elif centroid[1] > H // 2:
                 to.start = 0
 
         else:
-            y = [c[0] for c in to.centroids]
-            direction = centroid[0] - np.mean(y)
+            y = [c[1] for c in to.centroids]
+            direction = centroid[1] - np.mean(y)
             to.centroids.append(centroid)
 
             if not to.counted:
-                if centroid[0] < W // 2:
+                if centroid[1] < H - (H // 2):
                     if direction < 0 and to.start == 0:
-                        totalDown += 1
-                        to.counted = True
-                        inDH += 1
-                        print("In Dining Hall: " + str(inDH))
-                        print("Arrived: " + str(totalDown))
-
-                elif centroid[0] > W // 2:
-                    if direction > 0 and to.start == 1:
                         totalUp += 1
                         to.counted = True
                         inDH -= 1
                         print("In Dining Hall: " + str(inDH))
                         print("Left: " + str(totalUp))
 
+                elif centroid[1] > H - (H // 2):
+                    if direction > 0 and to.start == 1:
+                        totalDown += 1
+                        to.counted = True
+                        inDH += 1
+                        print("In Dining Hall: " + str(inDH))
+                        print("Arrived: " + str(totalDown))
+
         trackableObjects[objectID] = to
 
-        # draw both the ID of the object and the centroid of the
-        # object on the output frame
         # text = "ID {}".format(objectID)
         # cv2.putText(frame, text, (centroid[0] - 10, centroid[1] - 10),
         #     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
@@ -210,6 +210,12 @@ while True:
         ("Counter", counter)
     ]
 
+    current = datetime.datetime.now()
+    if current > now + interval:
+        database.updateCapacity("carrillo", inDH)
+        print("---- UPDATED DATABASE -----")
+        now = current
+
     #("In Line", inLine)
 
     # loop over the info tuples and draw them on our frame
@@ -222,7 +228,7 @@ while True:
     if writer is not None:
         writer.write(frame)
 
-    #cv2.imshow("Frame", frame)
+    cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
 
     if key == ord("q"):
