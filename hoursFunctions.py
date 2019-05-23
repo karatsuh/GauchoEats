@@ -39,7 +39,7 @@ def hours(diningCommon, mealTime):
         speech = diningCommon + " doesn't have " + mealTime + "."
         return speech
     if (not isWeekend):
-        if diningCommon == "Ortega":
+        if diningCommon == "ortega":
             hours = dynamoGetMap("ortega", "hours")
             if mealTime == "breakfast":
                 speech = "Ortega is open from " + hours['breakfastOpen'] + " to " + hours['breakfastClose'] + " for breakfast"
