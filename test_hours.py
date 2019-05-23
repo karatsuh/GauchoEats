@@ -18,7 +18,7 @@ def test_hours():
     print("testing dlg breakfast: ")
     dlgBreakfast = hours("dlg", "breakfast")
     assert dlgBreakfast == "Dlg doesn't have breakfast."
-    if isWeekend == false:
+    if isWeekend == False:
         print("testing dlg lunch: ")
         assert hours("dlg", "lunch") == "D.L.G. is open from 11:30 AM to 2:30 PM for lunch"
         print("testing dlg dinner: ")
