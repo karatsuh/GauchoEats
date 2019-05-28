@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <boost/tuple/tuple.hpp>
 #include <boost/foreach.hpp>
+#include <iostream>
 
 // Warn about use of deprecated functions.
 #define GNUPLOT_DEPRECATE_WARN
@@ -46,28 +47,90 @@ void pause_if_needed() {
 
 void plotPng() {
 	Gnuplot gp;
+	std::ifstream lineDLG("lineDLG.dat");
+	std::ifstream capDLG("capDLG.dat");
+	std::ifstream lineCarrillo("lineCarrillo.dat");
+	std::ifstream capCarrillo("capCarrillo.dat");
+	std::ifstream lineOrtega("lineOrtega.dat");
+	std::ifstream capOrtega("capOrtega.dat");
 
-	gp << "set terminal png\n";
+	if (!(lineDLG.peek() == std::ifstream::traits_type::eof()) ){ //check if file is empty (nothing to read, Lambda will let the user know instead of displaying image)
+		gp << "set terminal png size 720,480\n";
+		gp << "set title 'Line at DLG'\n";
+		gp << "set output 'lineDLG.png'\n";
+		gp << "set xlabel 'Time'\n";
+		gp << "set ylabel 'Line'\n";
+		gp << "set key off\n";
+		gp << "set timefmt '%H:%M'\n";
+		gp << "set xdata time\n";
+	 	gp << "set format x '%H:%M'\n";
+		gp << "plot 'lineDLG.dat' using 1:2 with lines\n";
+	}
 
-	gp << "set title 'Line at DLG'\n";
-	gp << "set output 'lineDLG.png'\n";
-	gp << "set xlabel 'Time'\n";
-	gp << "set ylabel 'Line'\n";
-	gp << "set key off\n";
-	gp << "plot 'data.dat' with lines\n";
+	if (!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+		gp << "set terminal png size 720,480\n";
+		gp << "set title 'Capacity at DLG'\n";
+		gp << "set output 'capDLG.png'\n";
+		gp << "set xlabel 'Time'\n";
+		gp << "set ylabel 'Line'\n";
+		gp << "set key off\n";
+		gp << "set timefmt '%H:%M'\n";
+		gp << "set xdata time\n";
+		gp << "set format x '%H:%M'\n";
+		gp << "plot 'capDLG.dat' using 1:2 with lines\n";
+	}
 
-	// std::vector<double> y_pts;
-	// for (double i = 0.0; i < 50.0;i+=1.0){
-	// 	y_pts.push_back(i);
-	// }
-	//
-	// gp << "set title 'Line at DLG'\n";
-	// gp << "set output 'lineDLG.png'\n";
-	// gp << "set xlabel 'Time'\n";
-	// gp << "set ylabel 'Line'\n";
-	// gp << "plot '-' with lines\n";
-	// gp.send1d(y_pts);
+	if (!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+		gp << "set terminal png size 720,480\n";
+		gp << "set title 'Line at Carrillo'\n";
+		gp << "set output 'lineCarrillo.png'\n";
+		gp << "set xlabel 'Time'\n";
+		gp << "set ylabel 'Line'\n";
+		gp << "set key off\n";
+		gp << "set timefmt '%H:%M'\n";
+		gp << "set xdata time\n";
+		gp << "set format x '%H:%M'\n";
+		gp << "plot 'lineCarrillo.dat' using 1:2 with lines\n";
+	}
 
+	if(!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+		gp << "set terminal png size 720,480\n";
+		gp << "set title 'Capacity at Carrillo'\n";
+		gp << "set output 'capCarrillo.png'\n";
+		gp << "set xlabel 'Time'\n";
+		gp << "set ylabel 'Line'\n";
+		gp << "set key off\n";
+		gp << "set timefmt '%H:%M'\n";
+		gp << "set xdata time\n";
+		gp << "set format x '%H:%M'\n";
+		gp << "plot 'capCarrillo.dat' using 1:2 with lines\n";
+	}
+
+	if(!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+		gp << "set terminal png size 720,480\n";
+		gp << "set title 'Line at Ortega'\n";
+		gp << "set output 'lineOrtega.png'\n";
+		gp << "set xlabel 'Time'\n";
+		gp << "set ylabel 'Line'\n";
+		gp << "set key off\n";
+		gp << "set timefmt '%H:%M'\n";
+		gp << "set xdata time\n";
+		gp << "set format x '%H:%M'\n";
+		gp << "plot 'lineOrtega.dat' using 1:2 with lines\n";
+	}
+
+	if(!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+		gp << "set terminal png size 720,480\n";
+		gp << "set title 'Capacity at Ortega'\n";
+		gp << "set output 'capOrtega.png'\n";
+		gp << "set xlabel 'Time'\n";
+		gp << "set ylabel 'Line'\n";
+		gp << "set key off\n";
+		gp << "set timefmt '%H:%M'\n";
+		gp << "set xdata time\n";
+		gp << "set format x '%H:%M'\n";
+		gp << "plot 'capOrtega.dat' using 1:2 with lines\n";
+	}
 }
 
 
