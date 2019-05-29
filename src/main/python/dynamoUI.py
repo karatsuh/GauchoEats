@@ -15,4 +15,36 @@ class DynamoUI:
 				':val1': num
 			}
 		)
+
+	def clearCapacityLog(self, diningHall):
+		self.table.update_item(
+			Key={
+				'DiningCommon' : diningHall,
+			},
+			UpdateExpression = 'SET capacityLog = :var1',
+			ExpressionAttributeValues={
+				':var1' : []
+			}
+		)
+
+	def isDiningOpen(self, diningHall):
+		response = self.table.get_item(
+			Key={
+				'DiningCommon' : diningHall
+			}
+		)
+		item = response['Item']
+		isWeekend = item['isOpen']
+		return isWeekend
+
+	def updateCapacityLog(self, diningHall, updateString):
+		self.table.update_item(
+			Key={
+				'DiningCommon': diningHall,
+			},
+			UpdateExpression='SET capacityLog = list_append(capacityLog, :var1)',
+			ExpressionAttributeValues={
+				':var1': [updateString]
+			}
+		)
 		

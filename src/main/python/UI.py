@@ -194,6 +194,49 @@ class UserInteraction:
         }
     )
 
+  def updateCapacityLog(self, diningHall, updateString):
+    self.table.update_item(
+            Key={
+                'DiningCommon': diningHall,
+            },
+            UpdateExpression='SET capacityLog = list_append(capacityLog, :var1)',
+            ExpressionAttributeValues={
+                ':var1': [updateString]
+            }
+        )
+
+  def updateCapacity(self, diningHall, capacity):
+    self.table.update_item(
+        Key={
+            'DiningCommon': diningHall,
+        },
+        UpdateExpression='SET diningCapacity = :val1',
+        ExpressionAttributeValues={
+            ':val1': capacity
+        }
+    )
+
+  def clearCapacityLog(self, diningHall):
+    self.table.update_item(
+            Key={
+                'DiningCommon': diningHall,
+            },
+            UpdateExpression='SET capacityLog = :var1',
+            ExpressionAttributeValues={
+                ':var1': []
+            }
+        )
+
+  def isDiningOpen(self, diningHall):
+    response = self.table.get_item(
+      Key={
+            'DiningCommon': diningHall,
+        }
+    )
+    item = response['Item']
+    isWeekend = item['isOpen']
+    return isWeekend
+
 
 
 

@@ -2,7 +2,7 @@
 
 from pyimagesearch.centroidtracker import CentroidTracker
 from pyimagesearch.trackableobject import TrackableObject
-#from datetime import datetime
+from dynamoUI import DynamoUI
 import time
 from imutils.video import VideoStream
 from imutils.video import FPS
@@ -10,6 +10,7 @@ import numpy as np
 import argparse
 import imutils
 import time
+import datetime
 import dlib
 import cv2
 import requests
@@ -32,9 +33,6 @@ ap.add_argument("-s", "--skip-frames", type=int, default=15,
     help="# of skip frames between detections")
 args = vars(ap.parse_args())
 
-
-#stream = requests.get(url, stream=True)
-
 CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
     "bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
     "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
@@ -53,6 +51,7 @@ net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
 #    vs = cv2.VideoCapture(args["input"])
 
 url = "https://api.ucsb.edu/dining/cams/v2/stream/de-la-guerra?ucsb-api-key=RWNmwapAJVigtDphtVjipbv2Rrqfulik"
+#vs = requests.get(url, stream=True)
 vs = VideoStream(src=url).start()
 time.sleep(2.0)
 
@@ -76,13 +75,18 @@ inDH = 0
 tracking = 0
 
 fps = FPS().start()
-#printHello()
+database = DynamoUI()
+database.clearCapacityLog("dlg")
+isOpen = database.isDiningOpen("dlg")
 
 now = datetime.datetime.now()
-interval = datetime.timedelta(minutes=1)
+interval = datetime.timedelta(seconds=30)
 
-while True:
+while True and isOpen:
     frame = vs.read()
+
+    if frame is None:
+        break
 
     # frame = frame[1] if args.get("input", False) else frame
 
@@ -226,9 +230,13 @@ while True:
 
     current = datetime.datetime.now()
     if current > now + interval:
+        adjustment = datetime.timedelta(hours=7)
+        current = current - adjustment
         database.updateCapacity("dlg", inDH)
+        updateString = current.strftime("%H:%M:%S") + " " + str(inDH)
+        database.updateCapacityLog("dlg", updateString)
         print("---- UPDATED DATABASE -----")
-        now = current
+        now = current + adjustment
 
     #("In Line", inLine)
 
@@ -242,7 +250,7 @@ while True:
     if writer is not None:
         writer.write(frame)
 
-    cv2.imshow("Frame", frame)
+    #cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
 
     if key == ord("q"):
@@ -250,6 +258,7 @@ while True:
 
     totalFrames += 1
     fps.update()
+    isOpen = database.isDiningOpen("dlg")
 
 
 fps.stop()
@@ -265,11 +274,12 @@ if writer is not None:
     writer.release()
 
 # if we are not using a video file, stop the camera video stream
-if not args.get("input", False):
-    vs.stop()
+vs.stop()
+# if not args.get("input", False):
+#     vs.stop()
 
-# otherwise, release the video file pointer
-else:
-    vs.release()
+# # otherwise, release the video file pointer
+# else:
+#     vs.release()
 
 cv2.destroyAllWindows()
