@@ -61,74 +61,74 @@ void plotPng() {
 		gp << "set xlabel 'Time'\n";
 		gp << "set ylabel 'Line'\n";
 		gp << "set key off\n";
-		gp << "set timefmt '%H:%M'\n";
+		gp << "set timefmt '%H:%M:%S'\n";
 		gp << "set xdata time\n";
-	 	gp << "set format x '%H:%M'\n";
+	 	gp << "set format x '%H:%M:%S'\n";
 		gp << "plot 'lineDLG.dat' using 1:2 with lines\n";
 	}
 
-	if (!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+	if (!(capDLG.peek() == std::ifstream::traits_type::eof())){
 		gp << "set terminal png size 720,480\n";
 		gp << "set title 'Capacity at DLG'\n";
 		gp << "set output 'capDLG.png'\n";
 		gp << "set xlabel 'Time'\n";
 		gp << "set ylabel 'Line'\n";
 		gp << "set key off\n";
-		gp << "set timefmt '%H:%M'\n";
+		gp << "set timefmt '%H:%M:%S'\n";
 		gp << "set xdata time\n";
-		gp << "set format x '%H:%M'\n";
+	 	gp << "set format x '%H:%M:%S'\n";
 		gp << "plot 'capDLG.dat' using 1:2 with lines\n";
 	}
 
-	if (!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+	if (!(lineCarrillo.peek() == std::ifstream::traits_type::eof())){
 		gp << "set terminal png size 720,480\n";
 		gp << "set title 'Line at Carrillo'\n";
 		gp << "set output 'lineCarrillo.png'\n";
 		gp << "set xlabel 'Time'\n";
 		gp << "set ylabel 'Line'\n";
 		gp << "set key off\n";
-		gp << "set timefmt '%H:%M'\n";
+		gp << "set timefmt '%H:%M:%S'\n";
 		gp << "set xdata time\n";
-		gp << "set format x '%H:%M'\n";
+	 	gp << "set format x '%H:%M:%S'\n";
 		gp << "plot 'lineCarrillo.dat' using 1:2 with lines\n";
 	}
 
-	if(!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+	if(!(capCarrillo.peek() == std::ifstream::traits_type::eof())){
 		gp << "set terminal png size 720,480\n";
 		gp << "set title 'Capacity at Carrillo'\n";
 		gp << "set output 'capCarrillo.png'\n";
 		gp << "set xlabel 'Time'\n";
 		gp << "set ylabel 'Line'\n";
 		gp << "set key off\n";
-		gp << "set timefmt '%H:%M'\n";
+		gp << "set timefmt '%H:%M:%S'\n";
 		gp << "set xdata time\n";
-		gp << "set format x '%H:%M'\n";
+	 	gp << "set format x '%H:%M:%S'\n";
 		gp << "plot 'capCarrillo.dat' using 1:2 with lines\n";
 	}
 
-	if(!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+	if(!(lineOrtega.peek() == std::ifstream::traits_type::eof())){
 		gp << "set terminal png size 720,480\n";
 		gp << "set title 'Line at Ortega'\n";
 		gp << "set output 'lineOrtega.png'\n";
 		gp << "set xlabel 'Time'\n";
 		gp << "set ylabel 'Line'\n";
 		gp << "set key off\n";
-		gp << "set timefmt '%H:%M'\n";
+		gp << "set timefmt '%H:%M:%S'\n";
 		gp << "set xdata time\n";
-		gp << "set format x '%H:%M'\n";
+	 	gp << "set format x '%H:%M:%S'\n";
 		gp << "plot 'lineOrtega.dat' using 1:2 with lines\n";
 	}
 
-	if(!(lineDLG.peek() == std::ifstream::traits_type::eof())){
+	if(!(capOrtega.peek() == std::ifstream::traits_type::eof())){
 		gp << "set terminal png size 720,480\n";
 		gp << "set title 'Capacity at Ortega'\n";
 		gp << "set output 'capOrtega.png'\n";
 		gp << "set xlabel 'Time'\n";
 		gp << "set ylabel 'Line'\n";
 		gp << "set key off\n";
-		gp << "set timefmt '%H:%M'\n";
+		gp << "set timefmt '%H:%M:%S'\n";
 		gp << "set xdata time\n";
-		gp << "set format x '%H:%M'\n";
+		gp << "set format x '%H:%M:%S'\n";
 		gp << "plot 'capOrtega.dat' using 1:2 with lines\n";
 	}
 }
