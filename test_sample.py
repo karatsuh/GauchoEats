@@ -11,11 +11,13 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('GauchoEats')
 
 table.update_item(
-    Key={
+    Key=
+    {
         'DiningCommon': "carrillo",
     },
     UpdateExpression='SET updateTime = :val1',
-    ExpressionAttributeValues={
+    ExpressionAttributeValues=
+    {
         ':val1': date
     }
 )
