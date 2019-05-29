@@ -1,0 +1,160 @@
+swagger: '2.0'
+info:
+  title: Dining Menu
+  description: UCSB Dining Commons Menu.
+  version: v1
+
+host: api.ucsb.edu
+basePath: /dining/menu/v1
+schemes:
+  - https
+securityDefinitions:
+  ucsb-api-key:
+    type: apiKey
+    in: header
+    name: ucsb-api-key
+tags:
+- name: menu
+  description: Dining Commons Menu
+
+paths:
+  /:
+    get:
+      tags:
+      - menu
+      operationId: GetServiceDays
+      produces:
+      - application/json
+      summary: Get list of current and upcoming dates with meal service.
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ServiceDay'
+      security:
+      - ucsb-api-key: []
+
+  /{date-time}:
+    get:
+      tags:
+      - menu
+      operationId: GetDiningCommonsServing
+      produces:
+      - application/json
+      summary: Get list of Dining Common names and codes serving meals on given date.
+      description: >
+        If given date only or date with 00:00:00 time, will return dining commons serving any time of day.
+        If given date-time with specific local time, will return dining commons only serving at that time.
+      parameters:
+      - name: date-time
+        in: path
+        required: true
+        type: string
+        format: date-time
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DiningCommon'
+      security:
+      - ucsb-api-key: []
+
+  /{date-time}/{dining-common-code}:
+    get:
+      tags:
+      - menu
+      operationId: GetMealsServing
+      produces:
+      - application/json
+      summary: Get list of Meal names and codes serving in given Dining Common on given date.
+      description: >
+        If given date only or date with 00:00:00 time, will return meals serving any time of day.
+        If given date-time with specific local time, will return meals only serving at and after that time of day.
+      parameters:
+      - name: date-time
+        in: path
+        required: true
+        type: string
+        format: date-time
+      - name: dining-common-code
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Meal'
+      security:
+      - ucsb-api-key: []
+      
+  /{date-time}/{dining-common-code}/{meal-code}:
+    get:
+      tags:
+      - menu
+      operationId: GetMenu
+      produces:
+      - application/json
+      summary: Get list of entrees and stations serving on given Date, in given Dining Common for given Meal.
+      description: >
+        Time in date-time will be ignored.
+      parameters:
+      - name: date-time
+        in: path
+        required: true
+        type: string
+        format: date-time
+      - name: dining-common-code
+        in: path
+        required: true
+        type: string
+      - name: meal-code
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entree'
+      security:
+      - ucsb-api-key: []
+
+definitions:
+  ServiceDay:
+    type: object
+    properties:
+      name: 
+        type: string
+      code:
+        type: string
+        format: date
+  DiningCommon:
+    type: object
+    properties:
+      name:
+        type: string
+      code:
+        type: string
+  Meal:
+    type: object
+    properties:
+      name:
+        type: string
+      code:
+        type: string
+  Entree:
+    type: object
+    properties:
+      name:
+        type: string
+      station:
+        type: string
