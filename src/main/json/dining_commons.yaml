@@ -1,0 +1,374 @@
+swagger: '2.0'
+info:
+  title: Dining Commons
+  description: Information related to UCSB Dining Commons.
+  version: v1
+host: api.ucsb.edu
+basePath: /dining/commons/v1
+schemes:
+  - https
+securityDefinitions:
+  ucsb-api-key:
+    type: apiKey
+    in: header
+    name: ucsb-api-key
+tags:
+- name: info
+  description: General information about dining commons.
+- name: meals
+  description: Information about meals served at the dining commons.
+- name: hours
+  description: Meal service hours at the dining commons.
+- name: announcement
+  description: Dining commons announcements.
+
+paths:
+
+  /:
+    get:
+      tags:
+      - info
+      operationId: GetInfoForAllDiningCommons
+      produces:
+      - application/json
+      summary: Get info for all dining commons
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/dining-common'
+      security:
+      - ucsb-api-key: []
+
+  /names:
+    get:
+      tags:
+      - info
+      operationId: GetNamesForAllDiningCommons
+      produces:
+      - application/json
+      summary: Get names for all dining commons.
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/dining-common-name'
+      security:
+      - ucsb-api-key: []
+
+  /locations:
+    get:
+      tags:
+      - info
+      operationId: GetLocationsForAllDiningCommons
+      produces:
+      - application/json
+      summary: Get locations for all dining commons.
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/dining-common-location'
+      security:
+      - ucsb-api-key: []
+
+  /{dining-common-code}:
+    get:
+      tags:
+      - info
+      operationId: GetInfoForOneDiningCommon
+      produces:
+      - application/json
+      summary: Get info for one dining common.
+      parameters:
+      - name: dining-common-code
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/dining-common'
+        404:
+          description: Dining common not found
+      security:
+      - ucsb-api-key: []
+
+  /meals:
+    get:
+      tags:
+      - meals
+      operationId: GetInfoForAllMeals
+      produces:
+      - application/json
+      summary: Get info for all meals.
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/meal'
+      security:
+      - ucsb-api-key: []
+
+  /meals/names:
+    get:
+      tags:
+      - meals
+      operationId: GetNameForAllMeals
+      produces:
+      - application/json
+      summary: Get names for all meals.
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/meal-name'
+      security:
+      - ucsb-api-key: []
+
+  /meals/{meal-code}:
+    get:
+      tags:
+      - meals
+      operationId: GetInfoForOneMeal
+      produces:
+      - application/json
+      summary: Get info for one meal.
+      parameters:
+      - name: meal-code
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/meal'
+        404:
+          description: Meal not found
+      security:
+      - ucsb-api-key: []
+
+  /hours/{date}:
+    get:
+      tags:
+      - hours
+      operationId: GetMealHoursForDate
+      produces:
+      - application/json
+      summary: Get hours for all meals in all dining commons for given date. 
+      parameters:
+      - name: date
+        in: path
+        required: true
+        type: string
+        format: date
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/meal-time'
+      security:
+      - ucsb-api-key: []
+
+  /hours/{date}/{dining-common-code}:
+    get:
+      tags:
+      - hours
+      operationId: GetMealHoursForDateAndDiningCommon
+      produces:
+      - application/json
+      summary: Get hours for all meals in one dining commons for given date.
+      parameters:
+      - name: date
+        in: path
+        required: true
+        type: string
+        format: date
+      - name: dining-common-code
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/meal-time'
+      security:
+      - ucsb-api-key: []
+
+  /hours/{date}/{dining-common-code}/{meal-code}:
+    get:
+      tags:
+      - hours
+      operationId: GetDiningCommonHoursForDateAndDiningCommonAndMeal
+      produces:
+      - application/json
+      summary: Get hours for one meal in one dining common for given date.
+      parameters:
+      - name: date
+        in: path
+        required: true
+        type: string
+        format: date
+      - name: dining-common-code
+        in: path
+        required: true
+        type: string
+      - name: meal-code
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/meal-time'
+      security:
+      - ucsb-api-key: []
+
+  /announcements:
+    get:
+      tags:
+      - announcement
+      operationId: GetCurrentAnnouncements
+      produces:
+      - application/json
+      summary: Get current announcements.
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/announcement'
+      security:
+      - ucsb-api-key: []
+
+  /announcements/{dining-common-code}:
+    get:
+      tags:
+      - announcement
+      operationId: GetCurrentAnnouncementsForOneDiningCommon
+      produces:
+      - application/json
+      summary: Get current announcements for one dining common.
+      parameters:
+      - name: dining-common-code
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/announcement'
+      security:
+      - ucsb-api-key: []
+
+definitions:
+
+  dining-common:
+    type: object
+    properties:
+      name:
+        type: string
+      code:
+        type: string
+      hasDiningCam:
+        type: boolean
+      hasSackMeal:
+        type: boolean
+      hasTakeoutMeal:
+        type: boolean
+      location:
+        type: object
+        properties:
+          latitude:
+            type: number
+            format: float
+          longitude:
+            type: number
+            format: float
+
+  dining-common-name:
+    type: object
+    properties:
+      name:
+        type: string
+      code:
+        type: string
+
+  dining-common-location:
+    type: object
+    properties:
+      code:
+        type: string
+      latitude:
+        type: number
+        format: float
+      longitude:
+        type: number
+        format: float
+
+  meal:
+    type: object
+    properties:
+      name:
+        type: string
+      code:
+        type: string
+      isWeekdayMeal:
+        type: boolean
+      isWeekendMeal:
+        type: boolean
+
+  meal-name:
+    type: object
+    properties:
+      name:
+        type: string
+      code:
+        type: string
+
+  meal-time:
+    type: object
+    properties:
+      diningCommonCode:
+        type: string
+      mealCode:
+        type: string
+      date:
+        type: string
+        format: date
+      open:
+        type: string
+        format: time
+      close:
+        type: string
+        format: time
+
+  announcement:
+    type: object
+    properties:
+      diningCommonCode:
+        type: string
+      text:
+        type: string
