@@ -1,6 +1,8 @@
 {
-    "interactionModel": {
-        "languageModel": {
+    "interactionModel": 
+    {
+        "languageModel": 
+        {
             "invocationName": "gaucho eats",
             "intents": [
                 {
