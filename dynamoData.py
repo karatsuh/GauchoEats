@@ -11,7 +11,7 @@ AWS_SECRET_ACCESS_KEY = ######################
 
 client = boto3.resource('dynamodb',aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name='us-east-1')
 
-table = client.Table('gauchoeats_log')
+table = client.Table('GauchoEats')
 
 def dynamoScan():
     class DecimalEncoder(json.JSONEncoder):
@@ -42,7 +42,7 @@ def dynamoGet(diningCommon, metric):
     #PostCondition: returns the wanted metric as a string
     #DiningCommon = "dlg","carrillo","ortega"
     #metric = "capacity","line"
-    dynamoResponse = table.get_item(Key = {'diningCommon' : diningCommon})
+    dynamoResponse = table.get_item(Key = {'DiningCommon' : diningCommon})
     metric = dynamoResponse['Item'][metric]
     metric = str(metric)
     return metric
@@ -58,16 +58,28 @@ def find_all_between( s, list, first, last ):
 
     #return s[start:end]
     return list
-file = open("lineDLG.dat", "w+")
-lineLog = dynamoGet("dlg","lineLog")
-lineLog = lineLog.replace("[","")
-lineLog = lineLog.replace("]","")
-lineLog = lineLog.replace(",","")
 
-lineDLGList =[]
-lineDLGList = find_all_between(lineLog, lineDLGList,"'","'")
+def makeDat(datName, diningCommon, metricLog):
+    file = open(datName, "w+")
+    log = dynamoGet(diningCommon,metricLog)
+    log = log.replace("[","")
+    log = log.replace("]","")
+    log = log.replace(",","")
+    log = log.replace(":00 "," ")
+    list =[]
+    list = find_all_between(log, list,"'","'")
 
-print(lineDLGList[5])
+    for line in list:
+        file.write(line + "\n")
+    file.close()
 
-for line in lineDLGList:
-    file.write(line + "\n")
+
+
+makeDat("lineDLG.dat","dlg","lineLog")
+makeDat("capDLG.dat","dlg","capacityLog")
+
+makeDat("lineCarrillo.dat","carrillo","lineLog")
+makeDat("capCarrillo.dat","carrillo","capacityLog")
+
+makeDat("lineOrtega.dat","ortega","lineLog")
+makeDat("capOrtega.dat","ortega","capacityLog")
