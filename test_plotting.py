@@ -15,12 +15,12 @@ def test_DatFiles():
     makeDat("lineOrtega.dat","ortega","lineLog")
     makeDat("capOrtega.dat","ortega","capacityLog")
 
-    assert os.path.exists('lineDLG.dat')
-    assert os.path.exists('capDLG.dat')
-    assert os.path.exists('lineCarrillo.dat')
-    assert os.path.exists('capCarrillo.dat')
-    assert os.path.exists('lineOrtega.dat')
-    assert os.path.exists('capOrtega.dat')
+    assert os.isfile('lineDLG.dat')
+    assert os.isfile('capDLG.dat')
+    assert os.isfile('lineCarrillo.dat')
+    assert os.isfile('capCarrillo.dat')
+    assert os.isfile('lineOrtega.dat')
+    assert os.isfile('capOrtega.dat')
 
 #now remove the dat files for future testing
 os.remove('lineDLG.dat')
