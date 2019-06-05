@@ -1,4 +1,4 @@
-# GauchoEats
+# GauchoEats https://travis-ci.org/karatsuh/GauchoEats.svg?branch=master
 An Alexa/Echo skill developed by Team Mapaches to provide continuous metrics of UC Santa Barbara affiliated Dining Halls in real time.
 
 ## Summary
