@@ -6,6 +6,7 @@ from dynamoData import *
 
 #create .dat files with makeDat function in dynamoData
 def test_DatFiles():
+    print("\ntest_DatFiles():\n")
     makeDat("lineDLG.dat","dlg","lineLog")
     makeDat("capDLG.dat","dlg","capacityLog")
 
@@ -15,12 +16,12 @@ def test_DatFiles():
     makeDat("lineOrtega.dat","ortega","lineLog")
     makeDat("capOrtega.dat","ortega","capacityLog")
 
-    assert os.isfile('lineDLG.dat')
-    assert os.isfile('capDLG.dat')
-    assert os.isfile('lineCarrillo.dat')
-    assert os.isfile('capCarrillo.dat')
-    assert os.isfile('lineOrtega.dat')
-    assert os.isfile('capOrtega.dat')
+    assert os.path.isfile('lineDLG.dat')
+    assert os.path.isfile('capDLG.dat')
+    assert os.path.isfile('lineCarrillo.dat')
+    assert os.path.isfile('capCarrillo.dat')
+    assert os.path.isfile('lineOrtega.dat')
+    assert os.path.isfile('capOrtega.dat')
 
 #now remove the dat files for future testing
 os.remove('lineDLG.dat')
