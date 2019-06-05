@@ -6,11 +6,9 @@ from boto3.dynamodb.conditions import Key, Attr
 
 import numpy as np
 
-AWS_ACCESS_KEY_ID = #####################
-AWS_SECRET_ACCESS_KEY = ######################
-
-client = boto3.resource('dynamodb',aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name='us-east-1')
-
+client = boto3.resource('dynamodb',aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+                        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'], 
+                        region_name='us-east-1')
 table = client.Table('GauchoEats')
 
 def dynamoScan():

@@ -7,6 +7,7 @@ import datetime
 now = datetime.datetime.now()
 date = now.strftime("%H:%M:%S")
 
+'''
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('GauchoEats')
 
@@ -21,3 +22,4 @@ table.update_item(
         ':val1': date
     }
 )
+'''
