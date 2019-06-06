@@ -237,6 +237,20 @@ class UserInteraction:
     isWeekend = item['isOpen']
     return isWeekend
 
+  def getMeals(self, hours):
+    meals = []
+    for x in hours:
+      if x['diningCommonCode'] == "portola":
+        continue;
+      diningHall = ""
+      if x["diningCommonCode"] == "de-la-guerra":
+        diningHall = "dlg"
+      else:
+        diningHall = x["diningCommonCode"]
+      if x["mealCode"] not in meals:
+        meals.append(x["mealCode"])
+    return meals
+
 
 
 

@@ -42,13 +42,7 @@ announcements = requests.get(announcementURL).json()
 if len(announcements) != 0:
 	database.enterAnnouncements(announcements)
 
-#determine possible meals
-if isWeekend:
-	meals = ['brunch', 'dinner']
-elif day == "Friday":
-	meals = ['breakfast', 'lunch', 'dinner']
-else:
-	meals = ['breakfast', 'lunch', 'dinner', 'late-night']
+meals = database.getMeals(hours)
 
 database.updateWeekend(isWeekend)
 
@@ -64,6 +58,8 @@ for x in commons:
 		else:
 			diningApiUrl = "https://api.ucsb.edu/dining/menu/v1/" + date + "/" + x + "/" + y + "?ucsb-api-key=UbuRqRNLJCxq4Sdx0nX2wGpwFb5SGOxY"
 		menu = requests.get(diningApiUrl).json()
+
+		#print(menu)
 
 		optionList = []
 		for z in menu:
