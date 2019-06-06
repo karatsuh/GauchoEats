@@ -15,6 +15,16 @@ class DynamoUI:
 				':val1': num
 			}
 		)
+	def updateLine(self, diningHall, num):
+		self.table.update_item(
+			Key={
+				'DiningCommon': diningHall
+			},
+			UpdateExpression='SET line = :val1',
+			ExpressionAttributeValues={
+				':val1': num
+			}
+		)
 
 	def clearCapacityLog(self, diningHall):
 		self.table.update_item(
@@ -22,6 +32,17 @@ class DynamoUI:
 				'DiningCommon' : diningHall,
 			},
 			UpdateExpression = 'SET capacityLog = :var1',
+			ExpressionAttributeValues={
+				':var1' : []
+			}
+		)
+
+	def clearLineLog(self, diningHall):
+		self.table.update_item(
+			Key={
+				'DiningCommon' : diningHall,
+			},
+			UpdateExpression = 'SET lineLog = :var1',
 			ExpressionAttributeValues={
 				':var1' : []
 			}
@@ -43,6 +64,17 @@ class DynamoUI:
 				'DiningCommon': diningHall,
 			},
 			UpdateExpression='SET capacityLog = list_append(capacityLog, :var1)',
+			ExpressionAttributeValues={
+				':var1': [updateString]
+			}
+		)
+
+	def updateLineLog(self, diningHall, updateString):
+		self.table.update_item(
+			Key={
+				'DiningCommon': diningHall,
+			},
+			UpdateExpression='SET lineLog = list_append(lineLog, :var1)',
 			ExpressionAttributeValues={
 				':var1': [updateString]
 			}
