@@ -1,8 +1,6 @@
-import requests
 import json  # alexa and lambda communicate with json!
 import boto3  # AWS SDK for python
 import os
-import datetime
 
 # DynamoDB primer
 client = boto3.resource('dynamodb')
@@ -40,7 +38,7 @@ def dynamoGetMap(DiningCommon, metric):
     dynamoResponse = table.get_item(Key={'DiningCommon': DiningCommon})
     metric = dynamoResponse['Item'][metric]
     return metric
-
+    
 def dynamoGetAnnouncements(DiningCommon):
     dynamoResponse = table.get_item(Key={'DiningCommon': DiningCommon})
     announcements = dynamoResponse['Item']['announcements']
@@ -98,7 +96,7 @@ def createStdSkillCard(title, text, diningCommonCode):
     card['image']['smallImageUrl'] = diningCamBaseUrl + '/still/' + diningCommonCode + diningCamKey
     card['image']['largeImageUrl'] = card['image']['smallImageUrl']
     return card
-
+    
 def createPlotCard(title,text,diningCommon,metric):
     baseURL = "https://s3.amazonaws.com/gauchoeats/"
     if diningCommon == "dlg":
@@ -107,7 +105,7 @@ def createPlotCard(title,text,diningCommon,metric):
         DC = "Carrillo"
     elif diningCommon == "Ortega":
         DC = diningCommon
-
+    
     URL = baseURL + metric + DC + ".png"
     card = {}
     card['type'] = 'Standard'
@@ -124,7 +122,7 @@ def doesNotHaveMeal(diningCommon, mealTime):
         doesNotHas = True
     elif ((mealTime == "late night") and (diningCommon != "dlg")):
         doesNotHas = True
-    elif ((mealTime == "brunch") and (diningCommon == "ortega")):
+    elif ((mealTime == "brunch") and (diningCommon == "Ortega")):
         doesNotHas = True
     return doesNotHas
 
@@ -198,7 +196,7 @@ def lambda_handler(event, context):
         return createResponse(speech, False)
 
     intentName = event['request']['intent']['name']
-    isWeekend = True if (str(dynamoGetMap("dlg", "isWeekend")) == "True") else False
+    isWeekend = dynamoGetMap("dlg", "isWeekend")
 #leastCrowded
     if intentName == "leastCrowded":
         # compare dining commons and store dining common name and its capacity
@@ -294,27 +292,55 @@ def lambda_handler(event, context):
         if dlg:
             diningCommons.append("DLG")
             skillCardContent = "\nDLG: "
-            for item in dlg:
-                skillCardContent += item + " and "
-            skillCardContent = skillCardContent[:-4]
+            for count,item in enumerate(dlg):
+                skillCardContent += item
+                if len(dlg) == 2:
+                    if count == 0:
+                        skillCardContent += " and "
+                elif len(dlg) == 3:
+                    if count == 0:
+                        skillCardContent += ", "
+                    elif count == 1: 
+                        skillCardContent += ", and "
         if carrillo:
             diningCommons.append("Carrillo")
             skillCardContent += "\nCarrillo: "
-            for item in carrillo:
-                skillCardContent += item + " and "
-            skillCardContent = skillCardContent[:-4]
+            for count,item in enumerate(carrillo):
+                skillCardContent += item
+                if len(carrillo) == 2:
+                    if count == 0:
+                        skillCardContent += " and "
+                elif len(carrillo) == 3:
+                    if count == 0:
+                        skillCardContent += ", "
+                    elif count == 1: 
+                        skillCardContent += ", and "
         if ortega:
             diningCommons.append("Ortega")
             skillCardContent += "\nOrtega: "
-            for item in ortega:
-                skillCardContent += item + " and "
-            skillCardContent = skillCardContent[:-4]
-        for name in diningCommons:
-            speech += name + " and "
-        speech = speech[:-4]
+            for count,item in enumerate(ortega):
+                skillCardContent += item
+                if len(ortega) == 2:
+                    if count == 0:
+                        skillCardContent += " and "
+                elif len(ortega) == 3:
+                    if count == 0:
+                        skillCardContent += ", "
+                    elif count == 1: 
+                        skillCardContent += ", and "
+        for count,name in enumerate(diningCommons):
+            speech += name
+            if len(diningCommons) == 2:
+                if count == 0:
+                    speech += " and "
+            elif len(diningCommons) == 3:
+                if count == 0:
+                    speech += ", "
+                elif count == 1: 
+                    speech += ", and "        
         if(len(diningCommons) == 1):
-            speech += " has " + foodItem
-        else: speech += " have " + foodItem
+            speech += " has " + foodItem + " today"
+        else: speech += " have " + foodItem + " today"
         if(not dlg and not carrillo and not ortega):
             speech = "The dining commons don't have " + foodItem + " today"
             skillCardContent += "No " + foodItem + " today"
@@ -512,11 +538,16 @@ def lambda_handler(event, context):
         skillCardContent = generateMenuStr(menu)
         skillCard = createMenuSkillCard(skillCardTitle, skillCardContent)
         return createResponse(speech, True, skillCard)
-
+    
 #getCapacity
     if intentName == "getCapacity": # probably need to check if the current one is open
         speech = buildSpeech(
             "getCapacity request received, where's the slot?!")
+        isOpen = dynamoGetMap(diningCommon.replace("Ortega", "ortega"), "isOpen")
+        if isOpen == False:
+            diningCommon = diningCommon.capitalize().replace("Dlg", "De La Guerra")
+            speech = buildSpeech(diningCommon + " is currently closed")
+            return createSimpleResponse(speech, True)
         if diningCommon == "dlg":
             capacity = dynamoGet("dlg", "diningCapacity")
             speech = buildSpeech("De La Guerra has a capacity of: " + capacity)
@@ -553,6 +584,11 @@ def lambda_handler(event, context):
 #getLine
     if intentName == "getLine":
         speech = buildSpeech("getLine request received, where's the slot?!")
+        isOpen = dynamoGetMap(diningCommon.replace("Ortega", "ortega"), "isOpen")
+        if isOpen == False:
+            diningCommon = diningCommon.capitalize().replace("Dlg", "De La Guerra")
+            speech = buildSpeech(diningCommon + " is currently closed")
+            return createSimpleResponse(speech, True)
         if diningCommon == "dlg":
             line = str(dynamoGet("dlg", "line"))
             skillCardTitle = "This is the Line at De La Guerra."
@@ -578,7 +614,7 @@ def lambda_handler(event, context):
         skillCard = createStdSkillCard(
             skillCardTitle, skillCardText, diningCommonCode)
         return createResponse(speech, True, skillCard)
-
+        
 #getCapacityPlot
     if intentName == "getCapacityPlot":
         if diningCommon == "dlg":
@@ -593,10 +629,10 @@ def lambda_handler(event, context):
             speech = buildSpeech("Here is the plot for the capacity at Carrillo today")
             skillCardTitle = "Capacity vs Time at Carrillo"
             skillCardText = "Capacity at Carrillo"
-
+            
         skillCard = createPlotCard(skillCardTitle,skillCardText, diningCommon,"cap")
         return createResponse(speech, True, skillCard)
-
+        
 #getLinePlot
     if intentName == "getLinePlot":
         if diningCommon == "dlg":
@@ -611,6 +647,6 @@ def lambda_handler(event, context):
             speech = buildSpeech("Here is the plot for the line at Carrillo today")
             skillCardTitle = "Line vs Time at Carrillo"
             skillCardText = "Line at Carrillo"
-
+            
         skillCard = createPlotCard(skillCardTitle,skillCardText, diningCommon,"line")
         return createResponse(speech, True, skillCard)
