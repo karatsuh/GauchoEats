@@ -199,26 +199,40 @@ def lambda_handler(event, context):
     isWeekend = dynamoGetMap("dlg", "isWeekend")
 #leastCrowded
     if intentName == "leastCrowded":
+        isOpenDlg = dynamoGetMap("dlg", "isOpen")
+        isOpenOrtega = dynamoGetMap("ortega", "isOpen")
+        isOpenCarrillo = dynamoGetMap("carrillo", "isOpen")
+        if (isOpenDlg == False) and (isOpenOrtega == False) and (isOpenCarrillo == False):
+            speech = buildSpeech("All dining halls are closed")
+            return createSimpleResponse(speech, True) 
         # compare dining commons and store dining common name and its capacity
-        dlg = ("dlg", dynamoGet("dlg", "diningCapacity"))
-        carrillo = ("carrillo", dynamoGet("carrillo", "diningCapacity"))
-        ortega = ("ortega", dynamoGet("ortega", "diningCapacity"))
-        # in progress
-        if (dlg[1] == "0") and (carrillo[1] == "0") and (ortega[1] == "0"):
+        dlg = ("DLG", dynamoGetMap("dlg", "diningCapacity") if isOpenDlg == True else 2000)
+        ortega = ("Ortega", dynamoGetMap("ortega", "diningCapacity") if isOpenOrtega == True else 2000)
+        carrillo = ("Carrillo", dynamoGetMap("carrillo", "diningCapacity") if isOpenCarrillo == True else 2000)
+        if ((dlg[1] <= 0) or (dlg[1] == 2000)) and ((ortega[1] <= 0) or (ortega[1] == 2000)) and ((carrillo[1] <= 0) or (carrillo[1] == 2000)):
             speech = buildSpeech("There are no lines at any of the three dining commons")
+            return createSimpleResponse(speech, True) 
+        if (dlg[1] <= carrillo[1]) and (dlg[1] <= ortega[1]):
+            leastCrowded = (dlg[0], dlg[1])
+        elif (carrillo[1] <= dlg[1]) and (carrillo[1] <= ortega[1]):
+            leastCrowded = (carrillo[0], carrillo[1])
         else:
-            if (dlg[1] <= carrillo[1]) and (dlg[1] <= ortega[1]):
-                leastCrowded = (dlg[0], dlg[1])
-            elif (carrillo[1] <= dlg[1]) and (carrillo[1] <= ortega[1]):
-                leastCrowded = (carrillo[0], carrillo[1])
-            else:
-                leastCrowded = (ortega[0], ortega[1])
-            speech = buildSpeech("The least crowded dining common is " +
-                                 leastCrowded[0] + " with capacity " + leastCrowded[1])
+            leastCrowded = (ortega[0], ortega[1])
+        speech = buildSpeech("The least crowded dining common is " +
+                             leastCrowded[0] + " with capacity " + str(leastCrowded[1]))
         skillCardTitle = "Which Dining Hall is the Least Crowded?"
-        skillCardContent = dlg[1] + " people in DLG\n" + ortega[1] + \
-            " people in Ortega\n" + carrillo[1] + " people in Carrillo\n"
-        #skillCardContent += "It will take only 5 min to get to DLG and 20 min to finish meal!"
+        if isOpenDlg:
+            skillCardContent = str(dlg[1]) + " people in DLG\n"
+        else:
+            skillCardContent = "DLG is closed\n"
+        if isOpenOrtega:
+            skillCardContent += str(ortega[1]) + " people in Ortega\n"
+        else:
+            skillCardContent += "Ortega is closed\n"
+        if isOpenCarrillo:
+            skillCardContent += str(carrillo[1]) + " people in Carrillo\n"
+        else:
+            skillCardContent += "Carrillo is closed\n"
         skillCard = createSkillCard(skillCardTitle, skillCardContent)
         return createResponse(speech, True, skillCard)
 
@@ -546,7 +560,7 @@ def lambda_handler(event, context):
         isOpen = dynamoGetMap(diningCommon.replace("Ortega", "ortega"), "isOpen")
         if isOpen == False:
             diningCommon = diningCommon.capitalize().replace("Dlg", "De La Guerra")
-            speech = buildSpeech(diningCommon + " is currently closed")
+            speech = buildSpeech(diningCommon + " is closed")
             return createSimpleResponse(speech, True)
         if diningCommon == "dlg":
             capacity = dynamoGet("dlg", "diningCapacity")
@@ -587,7 +601,7 @@ def lambda_handler(event, context):
         isOpen = dynamoGetMap(diningCommon.replace("Ortega", "ortega"), "isOpen")
         if isOpen == False:
             diningCommon = diningCommon.capitalize().replace("Dlg", "De La Guerra")
-            speech = buildSpeech(diningCommon + " is currently closed")
+            speech = buildSpeech(diningCommon + " is closed")
             return createSimpleResponse(speech, True)
         if diningCommon == "dlg":
             line = str(dynamoGet("dlg", "line"))
