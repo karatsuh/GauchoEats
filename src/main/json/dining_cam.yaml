@@ -1,0 +1,94 @@
+swagger: '2.0'
+info:
+  description: >
+    UCSB Dining Commons Dining Cams. This API contains a JPEG still or Motion
+    JPEG stream of the Cams. Motion JPEG does not work in Internet Explorer.
+    Use an img tag to display both. Motion JPEG consumes a lot of bandwidth.
+    Pass the API in the query string. Example: ?ucsb-api-key=12345
+  version: v2
+  title: Dining Cams
+  contact:
+    email: apphelp@arit.ucsb.edu
+host: api.ucsb.edu
+basePath: /dining/cams/v2
+tags:
+  - name: diningcams
+    description: Dining Cams
+schemes:
+  - https
+securityDefinitions:
+  ucsb-api-key:
+    type: apiKey
+    in: query
+    name: ucsb-api-key
+paths:
+  /:
+    get:
+      tags:
+        - diningcams
+      operationId: GetDiningCommonsWithCams
+      security:
+        - ucsb-api-key: []
+      summary: Get Dining Commons with Cams
+      produces:
+        - application/json
+      responses:
+        200:
+          description: List of Dining Common names and code with Dining Cams.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DiningCommon'
+
+  /still/{dining-common-code}:
+    get:
+      tags:
+        - diningcams
+      summary: View the Dining Cam still image.
+      operationId: ViewDiningCamStill
+      security:
+        - ucsb-api-key: []
+      produces:
+        - image/jpeg
+      parameters:
+        - in: path
+          name: dining-common-code
+          description: Must be a valid dining common code.
+          required: true
+          type: string
+      responses:
+        200:
+          description: A JPEG image of the Dining Cam.
+        404:
+          description: Could not find the Dining Cam with supplied code.
+
+  /stream/{dining-common-code}:
+    get:
+      tags:
+        - diningcams
+      summary: View the Dining Cam stream.
+      operationId: ViewDiningCamStream
+      security:
+        - ucsb-api-key: []
+      produces:
+        - multipart/x-mixed-replace
+      parameters:
+        - in: path
+          name: dining-common-code
+          description: Must be a valid dining common code.
+          required: true
+          type: string
+      responses:
+        200:
+          description: A Motion JPEG video of the Dining Cam.
+        404:
+          description: Could not find the Dining Cam with supplied code.
+          
+definitions:
+  DiningCommon:
+    type: object
+    properties:
+      name:
+        type: string
+      code:
+        type: string

@@ -1,6 +1,9 @@
 # dining hours api call: https://api.ucsb.edu/dining/commons/v1/hours/2019-05-09?ucsb-api-key=UbuRqRNLJCxq4Sdx0nX2wGpwFb5SGOxY
 # announcements api call: https://api.ucsb.edu/dining/commons/v1/announcements?ucsb-api-key=UbuRqRNLJCxq4Sdx0nX2wGpwFb5SGOxY
+# * * * * * python /home/ec2-user/project/hello.py (running regular scripts)
+# * * * * * /home/ec2-user/venv/python3/bin/python3 /home/ec2-user/project/sample2.py (running scripts through a virtualenv)
 
+# */5 * * * * /home/ec2-user/venv/python3/bin/python3 /home/ec2-user/project/Menu.py
 import boto3
 import requests
 import json
@@ -11,6 +14,8 @@ import time
 # get date
 now = datetime.datetime.now()
 date = now.strftime("%Y-%m-%d")
+updateTime = now.strftime("%H:%M:%S")
+completeTime = date + " " + updateTime
 day = time.strftime('%A')
 
 # set needed variables
@@ -20,6 +25,8 @@ if day == "Saturday" or day == "Sunday":
 meals = []
 dlg = []
 database = UserInteraction()
+
+database.updateTimeOf(completeTime)
 
 # set dining hall hours
 database.clearHours()
@@ -35,13 +42,9 @@ announcements = requests.get(announcementURL).json()
 if len(announcements) != 0:
 	database.enterAnnouncements(announcements)
 
-#determine possible meals
-if isWeekend:
-	meals = ['brunch', 'dinner']
-elif day == "Friday":
-	meals = ['breakfast', 'lunch', 'dinner']
-else:
-	meals = ['breakfast', 'lunch', 'dinner', 'late-night']
+meals = database.getMeals(hours)
+
+database.updateWeekend(isWeekend)
 
 # push all items from api to dynamodb
 for x in commons:
@@ -55,6 +58,8 @@ for x in commons:
 		else:
 			diningApiUrl = "https://api.ucsb.edu/dining/menu/v1/" + date + "/" + x + "/" + y + "?ucsb-api-key=UbuRqRNLJCxq4Sdx0nX2wGpwFb5SGOxY"
 		menu = requests.get(diningApiUrl).json()
+
+		#print(menu)
 
 		optionList = []
 		for z in menu:

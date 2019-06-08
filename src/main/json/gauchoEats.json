@@ -1,6 +1,8 @@
 {
-    "interactionModel": {
-        "languageModel": {
+    "interactionModel": 
+    {
+        "languageModel": 
+        {
             "invocationName": "gaucho eats",
             "intents": [
                 {
@@ -32,12 +34,9 @@
                         }
                     ],
                     "samples": [
+                        "how busy are the dining commons",
                         "how many people are in {diningCommon}",
-                        "how busy is {diningCommon}",
-                        "test {diningCommon}",
-                        "give me {diningCommon}",
-                        "gaucho eats give me {diningCommon}",
-                        "open {diningCommon}"
+                        "how busy is {diningCommon}"
                     ]
                 },
                 {
@@ -71,11 +70,18 @@
                         {
                             "name": "diningCommon",
                             "type": "diningCommon"
+                        },
+                        {
+                            "name": "mealTime",
+                            "type": "mealTime"
                         }
                     ],
                     "samples": [
+                        "what is {mealTime} at {diningCommon}",
+                        "what does {diningCommon} have for {mealTime}",
+                        "show me {diningCommon} {mealTime}",
                         "show me the menu",
-                        "show me the menu for {diningCommon}"
+                        "show me the {mealTime} menu for {diningCommon}"
                     ]
                 },
                 {
@@ -98,10 +104,84 @@
                         }
                     ],
                     "samples": [
+                        "what time is {diningCommon} open for {mealTime}",
                         "show me {mealTime} hours for {diningCommon}",
                         "what time is {mealTime} at {diningCommon}",
                         "when is {mealTime} at {diningCommon}"
                     ]
+                },
+                {
+                    "name": "findFood",
+                    "slots": [
+                        {
+                            "name": "foodItem",
+                            "type": "AMAZON.Food"
+                        }
+                    ],
+                    "samples": [
+                        "which dining common has {foodItem}",
+                        "who has {foodItem}"
+                    ]
+                },
+                {
+                    "name": "showDiningHall",
+                    "slots": [
+                        {
+                            "name": "diningCommon",
+                            "type": "diningCommon"
+                        }
+                    ],
+                    "samples": [
+                        "show me {diningCommon}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.MoreIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateSettingsIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NextIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PreviousIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollRightIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollLeftIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PauseIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ResumeIntent",
+                    "samples": []
                 }
             ],
             "types": [
@@ -117,7 +197,11 @@
                         {
                             "id": "carrillo",
                             "name": {
-                                "value": "carrillo"
+                                "value": "carrillo",
+                                "synonyms": [
+                                    "carillo",
+                                    "carreo"
+                                ]
                             }
                         },
                         {
@@ -136,17 +220,31 @@
                     "values": [
                         {
                             "name": {
+                                "value": "late-night",
+                                "synonyms": [
+                                    "late night"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
                                 "value": "brunch"
                             }
                         },
                         {
                             "name": {
-                                "value": "dinner"
+                                "value": "dinner",
+                                "synonyms": [
+                                    "supper"
+                                ]
                             }
                         },
                         {
                             "name": {
-                                "value": "lunch"
+                                "value": "lunch",
+                                "synonyms": [
+                                    "lunchtime"
+                                ]
                             }
                         },
                         {
@@ -155,8 +253,117 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "AMAZON.Food",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "eggs"
+                            }
+                        }
+                    ]
                 }
             ]
-        }
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "getCapacity",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "diningCommon",
+                            "type": "diningCommon",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {},
+                            "validations": [
+                                {
+                                    "type": "isNotInSet",
+                                    "prompt": "Slot.Validation.526690636109.885889300165.875658219622",
+                                    "values": [
+                                        "Portola"
+                                    ]
+                                },
+                                {
+                                    "type": "hasEntityResolutionMatch",
+                                    "prompt": "Slot.Validation.526690636109.885889300165.396211977866"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "getLine",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "diningCommon",
+                            "type": "diningCommon",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {},
+                            "validations": [
+                                {
+                                    "type": "hasEntityResolutionMatch",
+                                    "prompt": "Slot.Validation.483007937513.1072651540584.1399274088528"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "SKILL_RESPONSE"
+        },
+        "prompts": [
+            {
+                "id": "Slot.Validation.526690636109.885889300165.875658219622",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Sorry, I don't have that information on Portola. Ask me about Ortega, Carrillo, or D.L.G."
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.526690636109.885889300165.396211977866",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "{diningCommon} is not a dining common at UCSB, ask me about Ortega, Carrillo, or D.L.G."
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.483007937513.1072651540584.1399274088528",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "{diningCommon} is not a dining common at UCSB, ask me about Ortega, Carrillo, or D.L.G."
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.75592665977.1400414987432",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Which dining common's capacity would you like to know?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.443970026955.570762342539",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Which dining common would you like to see?"
+                    }
+                ]
+            }
+        ]
     }
 }

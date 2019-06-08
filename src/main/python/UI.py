@@ -127,6 +127,134 @@ class UserInteraction:
                 ':var1': []
             }
         )
+  
+  def updateTimeOf(self, updateTime):
+    self.table.update_item(
+        Key={
+            'DiningCommon': "carrillo",
+        },
+        UpdateExpression='SET updateTime = :val1',
+        ExpressionAttributeValues={
+            ':val1': updateTime
+        }
+    )
+
+  def updateWeekend(self, isWeekend):
+    diningHalls = ["ortega", "carrillo", "dlg"]
+    for x in diningHalls:
+      self.table.update_item(
+        Key={
+            'DiningCommon': x,
+        },
+        UpdateExpression='SET isWeekend = :val1',
+        ExpressionAttributeValues={
+            ':val1': isWeekend
+        }
+    )
+
+  def getHours(self, diningHall):
+    response = self.table.get_item(
+      Key={
+            'DiningCommon': diningHall,
+        }
+    )
+    item = response['Item']
+    hours = item['hours']
+    return hours
+
+  def getWeekendStatus(self):
+    response = self.table.get_item(
+      Key={
+            'DiningCommon': "ortega",
+        }
+    )
+    item = response['Item']
+    isWeekend = item['isWeekend']
+    return isWeekend
+
+  def updateStatus(self, isOpen, diningHall):
+    self.table.update_item(
+        Key={
+            'DiningCommon': diningHall,
+        },
+        UpdateExpression='SET isOpen = :val1',
+        ExpressionAttributeValues={
+            ':val1': isOpen
+        }
+    )
+
+  def updateMeal(self, meal, diningHall):
+    self.table.update_item(
+        Key={
+            'DiningCommon': diningHall,
+        },
+        UpdateExpression='SET currentMeal = :val1',
+        ExpressionAttributeValues={
+            ':val1': meal
+        }
+    )
+
+  def updateCapacityLog(self, diningHall, updateString):
+    self.table.update_item(
+            Key={
+                'DiningCommon': diningHall,
+            },
+            UpdateExpression='SET capacityLog = list_append(capacityLog, :var1)',
+            ExpressionAttributeValues={
+                ':var1': [updateString]
+            }
+        )
+
+  def updateCapacity(self, diningHall, capacity):
+    self.table.update_item(
+        Key={
+            'DiningCommon': diningHall,
+        },
+        UpdateExpression='SET diningCapacity = :val1',
+        ExpressionAttributeValues={
+            ':val1': capacity
+        }
+    )
+
+  def clearCapacityLog(self, diningHall):
+    self.table.update_item(
+            Key={
+                'DiningCommon': diningHall,
+            },
+            UpdateExpression='SET capacityLog = :var1',
+            ExpressionAttributeValues={
+                ':var1': []
+            }
+        )
+
+  def isDiningOpen(self, diningHall):
+    response = self.table.get_item(
+      Key={
+            'DiningCommon': diningHall,
+        }
+    )
+    item = response['Item']
+    isWeekend = item['isOpen']
+    return isWeekend
+
+  def getMeals(self, hours):
+    meals = []
+    for x in hours:
+      if x['diningCommonCode'] == "portola":
+        continue;
+      diningHall = ""
+      if x["diningCommonCode"] == "de-la-guerra":
+        diningHall = "dlg"
+      else:
+        diningHall = x["diningCommonCode"]
+      if x["mealCode"] not in meals:
+        meals.append(x["mealCode"])
+    return meals
+
+
+
+
+
 
 
 
