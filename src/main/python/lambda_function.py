@@ -7,9 +7,11 @@ import datetime
 # DynamoDB primer
 client = boto3.resource('dynamodb')
 table = client.Table('GauchoEats')
-sagemakerClient = boto3.client('sagemaker-runtime')
 # api
-
+diningCamBaseUrl = 'https://api.ucsb.edu/dining/cams/v2'
+diningBaseUrl = 'https://api.ucsb.edu/dining/menu/v1'
+diningCamKey = '?ucsb-api-key=RWNmwapAJVigtDphtVjipbv2Rrqfulik'
+diningKey = '?ucsb-api-key=UbuRqRNLJCxq4Sdx0nX2wGpwFb5SGOxY'
 diningCodes = {}
 diningCodes['dlg'] = 'de-la-guerra'
 diningCodes['ortega'] = 'ortega'
@@ -24,7 +26,7 @@ def dynamoGet(DiningCommon, metric):
     # PreCondition: DiningCommon and metric are both strings
     # PostCondition: returns the wanted metric as a string
     # DiningCommon = "dlg","carrillo","ortega"
-    # metric = "dinner","hours", "lunch", "breakfast", "brunch", "late-night"
+    # metric = "dinner","hours", "lunch", "breakfast", "brunch", "late night"
     dynamoResponse = table.get_item(Key={'DiningCommon': DiningCommon})
     metric = str(dynamoResponse['Item'][metric])
     return metric
@@ -96,12 +98,31 @@ def createStdSkillCard(title, text, diningCommonCode):
     card['image']['smallImageUrl'] = diningCamBaseUrl + '/still/' + diningCommonCode + diningCamKey
     card['image']['largeImageUrl'] = card['image']['smallImageUrl']
     return card
+    
+def createPlotCard(title,text,diningCommon,metric):
+    baseURL = "https://s3.amazonaws.com/gauchoeats/"
+    if diningCommon == "dlg":
+        DC = "DLG"
+    elif diningCommon == "carrillo":
+        DC = "Carrillo"
+    elif diningCommon == "Ortega":
+        DC = diningCommon
+    
+    URL = baseURL + metric + DC + ".png"
+    card = {}
+    card['type'] = 'Standard'
+    card['title'] = title
+    card['text'] = text
+    card['image'] = {}
+    card['image']['smallImageUrl'] = URL
+    card['image']['largeImageUrl'] = URL
+    return card
 
 def doesNotHaveMeal(diningCommon, mealTime):
     doesNotHas = False
     if ((diningCommon == "dlg") and (mealTime == "breakfast")):
-            doesNotHas = True
-    elif ((mealTime == "late-night") and (diningCommon != "dlg")):
+        doesNotHas = True
+    elif ((mealTime == "late night") and (diningCommon != "dlg")):
         doesNotHas = True
     elif ((mealTime == "brunch") and (diningCommon == "ortega")):
         doesNotHas = True
@@ -110,7 +131,7 @@ def doesNotHaveMeal(diningCommon, mealTime):
 def isClosedForMeal(diningCommon, mealTime, isWeekend):
     isClosed = False
     if (isWeekend):
-        if ((mealTime == "breakfast") or (mealTime == "lunch") or (mealTime == "late-night")):
+        if ((mealTime == "breakfast") or (mealTime == "lunch") or (mealTime == "late night")):
             isClosed = True
         elif (diningCommon == "Ortega"):
             isClosed = True
@@ -144,13 +165,16 @@ def findFoodItem(menu, foodItem):
     for type in menu.keys():
         typeArr.append(type)
     for type in typeArr:
-        for food in menu[type]:
-            if foodItem.lower() in food.lower():
+        for dish in menu[type]:
+            if foodItem.lower() in dish.lower():
                 return True
-            elif food.lower() in foodItem.lower():
+            elif dish.lower() in foodItem.lower():
+                return True
+            elif foodItem[:-1].lower() in dish.lower():
+                return True
+            elif foodItem[:-2].lower() in dish.lower():
                 return True
     else: return False
-
 
 def on_session_started(session_started_request, session):
     print ("Starting new session.")
@@ -223,6 +247,7 @@ def lambda_handler(event, context):
         dlg = []
         carrillo = []
         ortega = []
+        diningCommons = []
         if isWeekend == False:
             menu = dynamoGetMap("dlg", "lunch")
             if findFoodItem(menu, foodItem) == True:
@@ -232,7 +257,7 @@ def lambda_handler(event, context):
                 dlg.append("dinner")
             menu = dynamoGetMap("dlg", "late-night")
             if findFoodItem(menu, foodItem) == True:
-                dlg.append("late-night")
+                dlg.append("late night")
             menu = dynamoGetMap("carrillo", "breakfast")
             if findFoodItem(menu, foodItem) == True:
                 carrillo.append("breakfast")
@@ -251,25 +276,76 @@ def lambda_handler(event, context):
             menu = dynamoGetMap("ortega", "dinner")
             if findFoodItem(menu, foodItem) == True:
                 ortega.append("dinner")
+        else:
+            menu = dynamoGetMap("dlg", "brunch")
+            if findFoodItem(menu, foodItem) == True:
+                dlg.append("brunch")
+            menu = dynamoGetMap("dlg", "dinner")
+            if findFoodItem(menu, foodItem) == True:
+                dlg.append("dinner")
+            menu = dynamoGetMap("carrillo", "brunch")
+            if findFoodItem(menu, foodItem) == True:
+                dlg.append("brunch")
+            menu = dynamoGetMap("carrillo", "dinner")
+            if findFoodItem(menu, foodItem) == True:
+                dlg.append("dinner")
         skillCardContent = ""
+        speech = ""
+        if dlg:
+            diningCommons.append("DLG")
+            skillCardContent = "\nDLG: "
+            for count,item in enumerate(dlg):
+                skillCardContent += item
+                if len(dlg) == 2:
+                    if count == 0:
+                        skillCardContent += " and "
+                elif len(dlg) == 3:
+                    if count == 0:
+                        skillCardContent += ", "
+                    elif count == 1: 
+                        skillCardContent += ", and "
+        if carrillo:
+            diningCommons.append("Carrillo")
+            skillCardContent += "\nCarrillo: "
+            for count,item in enumerate(carrillo):
+                skillCardContent += item
+                if len(carrillo) == 2:
+                    if count == 0:
+                        skillCardContent += " and "
+                elif len(carrillo) == 3:
+                    if count == 0:
+                        skillCardContent += ", "
+                    elif count == 1: 
+                        skillCardContent += ", and "
+        if ortega:
+            diningCommons.append("Ortega")
+            skillCardContent += "\nOrtega: "
+            for count,item in enumerate(ortega):
+                skillCardContent += item
+                if len(ortega) == 2:
+                    if count == 0:
+                        skillCardContent += " and "
+                elif len(ortega) == 3:
+                    if count == 0:
+                        skillCardContent += ", "
+                    elif count == 1: 
+                        skillCardContent += ", and "
+        for count,name in enumerate(diningCommons):
+            speech += name
+            if len(diningCommons) == 2:
+                if count == 0:
+                    speech += " and "
+            elif len(diningCommons) == 3:
+                if count == 0:
+                    speech += ", "
+                elif count == 1: 
+                    speech += ", and "        
+        if(len(diningCommons) == 1):
+            speech += " has " + foodItem + " today"
+        else: speech += " have " + foodItem + " today"
         if(not dlg and not carrillo and not ortega):
             speech = "The dining commons don't have " + foodItem + " today"
             skillCardContent += "No " + foodItem + " today"
-        if dlg:
-            skillCardContent = "\nDLG"
-            speech = "DLG has " + foodItem + " for "
-            for item in dlg:
-                speech += item + " and "
-        if carrillo:
-            skillCardContent += "\nCarrillo"
-            speech = "Carrillo has " + foodItem + " for "
-            for item in carrillo:
-                speech += item + " and "
-        if ortega:
-            skillCardContent += "\nOrtega"
-            speech = "Ortega has " + foodItem + " for "
-            for item in ortega:
-                speech += item + " and "
         speech = buildSpeech(speech)
         skillCardTitle = "Dining commons that have " + foodItem
         skillCard = createSkillCard(skillCardTitle, skillCardContent)
@@ -281,12 +357,12 @@ def lambda_handler(event, context):
         mealTime = event['request']['intent']['slots']['mealTime']['value']
         if (doesNotHaveMeal(diningCommon, mealTime)):
             diningCommon = diningCommon.capitalize()
-            diningCommon.replace("Dlg", "De La Guerra")
+            diningCommon = diningCommon.replace("Dlg", "De La Guerra")
             speech = buildSpeech(diningCommon + " doesn't have " + mealTime + ".")
             return createSimpleResponse(speech, True)
         if (isClosedForMeal(diningCommon, mealTime, isWeekend)):
             diningCommon = diningCommon.capitalize()
-            diningCommon.replace("Dlg", "De La Guerra")
+            diningCommon = diningCommon.replace("Dlg", "De La Guerra")
             speech = buildSpeech(diningCommon + " is closed for " + mealTime + ".")
             return createSimpleResponse(speech, True)
         skillCardTitle = ""
@@ -304,8 +380,8 @@ def lambda_handler(event, context):
                 elif mealTime == "dinner":
                     speech = buildSpeech(
                         "Ortega is open from " + hours['dinnerOpen'] + " to " + hours['dinnerClose'] + " for dinner")
-                elif mealTime == "late-night":
-                    speech = buildSpeech("Ortega doesn't have late-night dining")
+                elif mealTime == "late night":
+                    speech = buildSpeech("Ortega doesn't have late night dining")
                 skillCardTitle = "Ortega's Hours"
                 skillCardContent = "Breakfast: " + hours['breakfastOpen'] + \
                     "-" + hours['breakfastClose'] + "\nLunch: " + \
@@ -322,8 +398,8 @@ def lambda_handler(event, context):
                 elif mealTime == "dinner":
                     speech = buildSpeech(
                         "Carrillo is open from " + hours['dinnerOpen'] + " to " + hours['dinnerClose'] + " for dinner")
-                elif mealTime == "late-night":
-                    speech = buildSpeech("Carrillo doesn't have late-night dining")
+                elif mealTime == "late night":
+                    speech = buildSpeech("Carrillo doesn't have late night dining")
                 skillCardTitle = "Carrillo's Hours"
                 skillCardContent = "Breakfast: " + hours['breakfastOpen'] + \
                     "-" + hours['breakfastClose'] + "\nLunch: " + \
@@ -337,14 +413,14 @@ def lambda_handler(event, context):
                 elif mealTime == "dinner":
                     speech = buildSpeech(
                         "D.L.G. is open from " + hours['dinnerOpen'] + " to " + hours['dinnerClose'] + " for dinner")
-                elif mealTime == "late-night":
+                elif mealTime == "late night":
                     speech = buildSpeech(
-                        "D.L.G. is open from " + hours['late-nightOpen'] + " to " + hours['late-nightClose'] + " for late-night")
+                        "D.L.G. is open from " + hours['late-nightOpen'] + " to " + hours['late-nightClose'] + " for late night")
                 skillCardTitle = "D.L.G.'s Hours"
                 skillCardContent = "Lunch: " + hours['lunchOpen'] + \
                     "-" + hours['lunchClose'] + "\nDinner: " + \
                     hours['dinnerOpen'] + "-" + hours['dinnerClose'] + \
-                    "\nLate-Night: " + \
+                    "\nLate Night: " + \
                     hours['late-nightOpen'] + "-" + hours['late-nightClose']
         else:
             if diningCommon == "carrillo":
@@ -379,12 +455,12 @@ def lambda_handler(event, context):
         mealTime = event['request']['intent']['slots']['mealTime']['value']
         if (doesNotHaveMeal(diningCommon, mealTime)):
             diningCommon = diningCommon.capitalize()
-            diningCommon.replace("Dlg", "De La Guerra")
+            diningCommon = diningCommon.replace("Dlg", "De La Guerra")
             speech = buildSpeech(diningCommon + " doesn't have " + mealTime + ".")
             return createSimpleResponse(speech, True)
         if (isClosedForMeal(diningCommon, mealTime, isWeekend)):
             diningCommon = diningCommon.capitalize()
-            diningCommon.replace("Dlg", "De La Guerra")
+            diningCommon = diningCommon.replace("Dlg", "De La Guerra")
             speech = buildSpeech(diningCommon + " is closed for " + mealTime + ".")
             return createSimpleResponse(speech, True)
         dish = ""
@@ -398,10 +474,10 @@ def lambda_handler(event, context):
                     menu = dynamoGetMap("dlg", "dinner")
                     dish = getDishStr(menu['To Order'])
                     speech = buildSpeech("De La Guerra has " + dish.replace("(vgn)", "") + "for dinner.")
-                elif mealTime == "late-night":
+                elif mealTime == "late night":
                     menu = dynamoGetMap("dlg", "late-night")
                     dish = getDishStr(menu['Grill (Cafe)'])
-                    speech = buildSpeech("De La Guerra has " + dish.replace("(vgn)", "") + " for late-night.")
+                    speech = buildSpeech("De La Guerra has " + dish.replace("(vgn)", "") + " for late night.")
                 skillCardTitle = "DLG's Menu:"
             elif diningCommon == "carrillo":
                 if mealTime == "breakfast":
@@ -447,7 +523,7 @@ def lambda_handler(event, context):
                     menu = dynamoGetMap("dlg", "dinner")
                     dish = getDishStr(menu['To Order'])
                     speech = buildSpeech("De La Guerra has " + dish.replace("(vgn)", "") + "for dinner.")
-                    speech = buildSpeech("De La Guerra has " + dish.replace("(vgn)", "") + " for late-night.")
+                    speech = buildSpeech("De La Guerra has " + dish.replace("(vgn)", "") + " for late night.")
                 skillCardTitle = "DLG's Menu:"
             elif diningCommon == "carrillo":
                 if mealTime == "brunch":
@@ -466,19 +542,10 @@ def lambda_handler(event, context):
         return createResponse(speech, True, skillCard)
     
 #getCapacity
-    if intentName == "getCapacity": # probably need to check the current time
+    if intentName == "getCapacity": # probably need to check if the current one is open
         speech = buildSpeech(
             "getCapacity request received, where's the slot?!")
         if diningCommon == "dlg":
-            print('---')
-            now = datetime.datetime.now()
-            if (now.hour < 9):
-                print("less than")
-            else:
-                print("greater than")
-            now = now.replace(hour=8, minute=0, second=0, microsecond=0)
-            print(now)
-            print('---')
             capacity = dynamoGet("dlg", "diningCapacity")
             speech = buildSpeech("De La Guerra has a capacity of: " + capacity)
             line = dynamoGet("dlg", "line")
@@ -538,4 +605,40 @@ def lambda_handler(event, context):
             skillCardText = "There are " + line + " people in line"
         skillCard = createStdSkillCard(
             skillCardTitle, skillCardText, diningCommonCode)
+        return createResponse(speech, True, skillCard)
+        
+#getCapacityPlot
+    if intentName == "getCapacityPlot":
+        if diningCommon == "dlg":
+            speech = buildSpeech("Here is the plot for the capacity at De La Guerra today")
+            skillCardTitle = "Capacity vs Time at De La Guerra"
+            skillCardText = "Capacity at DLG"
+        if diningCommon == "Ortega":
+            speech = buildSpeech("Here is the plot for the capacity at Ortega today")
+            skillCardTitle = "Capacity vs Time at Ortega"
+            skillCardText = "Capacity at Ortega"
+        if diningCommon == "carrillo":
+            speech = buildSpeech("Here is the plot for the capacity at Carrillo today")
+            skillCardTitle = "Capacity vs Time at Carrillo"
+            skillCardText = "Capacity at Carrillo"
+            
+        skillCard = createPlotCard(skillCardTitle,skillCardText, diningCommon,"cap")
+        return createResponse(speech, True, skillCard)
+        
+#getLinePlot
+    if intentName == "getLinePlot":
+        if diningCommon == "dlg":
+            speech = buildSpeech("Here is the plot for the line at De La Guerra today")
+            skillCardTitle = "Line vs Time at De La Guerra"
+            skillCardText = "Line at DLG"
+        if diningCommon == "Ortega":
+            speech = buildSpeech("Here is the plot for the line at Ortega today")
+            skillCardTitle = "Line vs Time at Ortega"
+            skillCardText = "Line at Ortega"
+        if diningCommon == "carrillo":
+            speech = buildSpeech("Here is the plot for the line at Carrillo today")
+            skillCardTitle = "Line vs Time at Carrillo"
+            skillCardText = "Line at Carrillo"
+            
+        skillCard = createPlotCard(skillCardTitle,skillCardText, diningCommon,"line")
         return createResponse(speech, True, skillCard)
