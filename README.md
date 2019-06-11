@@ -11,11 +11,13 @@ Metrics that GauchoEats records and logs include:
 ## Installation
 Step by step guide on installing GauchoEats onto your Echo enabled device.
 ### Prerequisites
-Stub
+Python 3 is required to run the visual detection algorithm.
+Boto 3 is required to interface with AWS DynamoDB, the database. 
+
 ### Installing
-Stub
+The code is deployed on Amazon AWS, only an Amazon Alexa account is required to utilize the app. 
 
 ## Functionality and Known Issues
-Stub
+The UCSB Dining Hall API is known to be buggy and malfunction. Faulty API calls can make the program crash.
 ## Licensing
 MIT License (https://github.com/karatsuh/TheMapaches/blob/master/LICENSE)
