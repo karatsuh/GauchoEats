@@ -20,7 +20,7 @@ def test_hours():
     assert dlgBreakfast == "Dlg doesn't have breakfast."
     if isWeekend == False:
         print("testing dlg lunch: ")
-        assert hours("dlg", "lunch") == "D.L.G. is open from 11:30 AM to 2:30 PM for lunch"
+        assert hours("dlg", "lunch") == "D.L.G. is open from 11:00 AM to 2:30 PM for lunch"
         print("testing dlg dinner: ")
         assert hours("dlg", "dinner") == "D.L.G. is open from 5:00 PM to 8:00 PM for dinner"
         print("testing dlg late-night: ")
@@ -40,5 +40,9 @@ def test_hours():
     else:
         print("testing carrillo brunch:")
         assert hours("carrillo", "brunch") == "Carrillo is open from 10:30 AM to 2:00 PM for brunch"
+        print("testing carrillo dinner:")
+        assert hours("carrillo", "dinner") == "Carrillo is open from 5:00 PM to 8:00 PM for dinner"
         print("testing dlg brunch:")
         assert hours("dlg", "brunch") == "D.L.G. is open from 10:30 AM to 2:00 PM for brunch"
+        print("testing dlg dinner: ")
+        assert hours("dlg", "dinner") == "D.L.G. is open from 5:00 PM to 8:00 PM for dinner"
